@@ -2,7 +2,7 @@
 
 $f = isset($_SERVER['QUERY_STRING'])
   ? explode('=', $_SERVER['QUERY_STRING'])[1]
-  : 'html';
+  : 'index';
 
 switch ($f) {
   case 'html':
@@ -20,6 +20,10 @@ switch ($f) {
   case 'js':
     $t = 'JavaScript pour le Web';
     $l = 'js';
+    break;
+  default:
+    $t = 'Page d’accueil';
+    $l = 'html';
     break;
 }
 
