@@ -33,3 +33,4 @@ De la syntaxe générale à la gestion de fonctions asynchrones en passant par l
 [==> Voir le diaporama](./?f=js)
 
 - [TD 1 (PDF)](./td/js/1/TD1.pdf)
+- [TD 2 (PDF)](./td/js/2/TD2.pdf)
