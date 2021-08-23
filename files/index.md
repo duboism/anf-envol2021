@@ -34,3 +34,8 @@ De la syntaxe générale à la gestion de fonctions asynchrones en passant par l
 
 - [TD 1 (PDF)](./td/js/1/TD1.pdf)
 - [TD 2 (PDF)](./td/js/2/TD2.pdf)
+
+### Node.js
+
+Découverte de la plateforme logicielle qui permet d’exécuter du JavaScript côté serveur.  
+[==> Voir le diaporama](./?f=node)
