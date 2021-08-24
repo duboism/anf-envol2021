@@ -17,7 +17,7 @@ Alexandre Roulois (Université de Paris, LLF, CNRS)
   - *streams* en lecture
   - *streams* en écriture
   - *streams* bidirectionnels
-- Gestion des fichiers
+- Gestion des fichiers et des répertoires
 
 ---
 
@@ -586,7 +586,7 @@ ne pas indiquer de taille dans `size`, le plus simple étant de lire le *chunk* 
 ]
 .col-droite[
 
-Cycle de vie d’un *stream* :
+Cycle de vie d’un *stream* en lecture :
 
 1. *chunk* émis
 2. événements `data` ou `readable` pour recevoir
@@ -709,7 +709,173 @@ readable.on('readable', () => {
 
 #### Gestion d’un *stream* en écriture
 
+Classe `stream.Writable()`
+- méthode privée `_write()` à définir obligatoirement
+- méthodes `write()` ou `end()` pour envoyer des *chunks* dans le *buffer*
+- si *buffer* plein, attendre événement `drain` pour accepter de nouveaux *chunks*
+
+```
+const stream = require('stream');
+const writable = new stream.Writable();
+
+writable._write = (chunk) => {
+  console.log(chunk.toString());
+}
+
+writable.write('Hello World!');
+```
+
 ]
+
+---
+
+.col-gauche[
+### Présentation
+### Gestion des modules
+### Gestion des événements
+### Gestion des *streams*
+- lecture
+- écriture
+]
+.col-droite[
+
+Méthode `write` prend trois paramètres obligatoires :
+- `chunk` : *buffer* d’octets
+- `encoding` : par défaut UTF-8
+- `callback` : fonction appelée sur `_write()` pour signifier la fin de l’écriture
+
+```
+const stream = require('stream');
+const writable = new stream.Writable();
+
+writable._write = (chunk, encoding, callback) => {
+  console.log(chunk.toString());
+  callback();
+}
+
+for (let i = 0; i <= 10; i++) {
+  writable.write(i.toString(), () => {
+    console.log(i);
+  });
+}
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Gestion des modules
+### Gestion des événements
+### Gestion des *streams*
+- lecture
+- écriture
+]
+.col-droite[
+
+Méthode `end` similaire à `write()` sauf :
+- appelée une seule fois pour fermer le *stream*
+- paramètres facultatifs
+
+Événement `error` à traiter
+
+```
+const stream = require('stream');
+const writable = new stream.Writable();
+
+writable._write = (chunk, encoding, callback) => {
+  console.log(chunk.toString());
+  callback();
+}
+
+for (let i = 0; i <= 10; i++) {
+  writable.write(i.toString(), () => {
+    console.log(i);
+  });
+}
+
+writable.end('Fin du stream');
+
+writable.on('error', (error) => {
+  console.log(error);
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Gestion des modules
+### Gestion des événements
+### Gestion des *streams*
+- lecture
+- écriture
+]
+.col-droite[
+
+Cycle de vie d’un *stream* en écriture :
+
+1. *chunk* poussé dans le *buffer* grâce à `write()`
+  - si `true` :
+    1. *chunk* traité en interne par `_write()`
+    2. appel fonction *callback* pour terminer le traitement
+  - si `false` :
+    1. mise en mémoire (taille limite paramètre `highWaterMark`)
+    2. attente événement `drain`
+2. reprise du cycle
+3. fin du *stream* avec `end()`
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Gestion des modules
+### Gestion des événements
+### Gestion des *streams*
+- lecture
+- écriture
+]
+.col-droite[
+
+Connecter *stream* lecture et *stream* écriture :
+
+```
+const stream = require('stream');
+const writable = new stream.Writable();
+const readable = new stream.Readable();
+
+writable._write = (chunk, encoding, callback) => {
+  console.log(chunk.toString());
+  callback();
+};
+
+readable.setEncoding('utf8');
+let content = 'Hello World!';
+
+readable._read = (size) => {
+  if (content) readable.push(content);
+  readable.push(null);
+};
+
+readable.on('readable', () => {
+  readable.read();
+});
+
+stream.pipeline(readable, writable, (error) => {
+  if (error) console.log(error);
+});
+```
+
+]
+
+???
+
+Existe aussi `readable.pipe(writable)` mais nécessite traitement individuel des erreurs
 
 ---
 
@@ -726,4 +892,415 @@ readable.on('readable', () => {
 
 #### Gestion d’un *stream* bidirectionnel
 
+Classe `stream.Duplex()` :
+- *streams* en lecture **et** en écriture
+- méthodes privées `_read()` et `_write()` à implémenter obligatoirement
+
+```
+const stream = require('stream');
+const duplex = new stream.Duplex();
+const content = 'Hello World!';
+
+duplex._write = (chunk, encoding, callback) => {
+  console.log(chunk.toString());
+  callback();
+};
+duplex._read = (size) => {
+  if (content) {
+    duplex.push(content);
+    duplex.write(content);
+  }
+  duplex.push(null);
+};
+duplex.on('readable', () => duplex.read());
+```
+
 ]
+
+---
+
+.col-gauche[
+### Présentation
+### Gestion des modules
+### Gestion des événements
+### Gestion des *streams*
+### Gestion des fichiers
+]
+.col-droite[
+
+API spécialisée de gestion de *streams*
+- lecture/écriture de fichiers
+- gestion synchrone classique avec méthode `readFileSync()`
+- gestion asynchrone avec méthode `readFile()`
+- retour sous forme d’octets
+
+```
+const fs = require('fs');
+const data = fs.readFileSync('./lamia.txt');
+console.log(data);
+```
+
+```
+fs.readFile('./lamia.txt', (error, data) => {
+  if (error) console.error(error.message);
+  else console.log(data);
+});
+```
+.imp[Rappel :] Node.js est mono *thread* ! Gestion synchrone à réserver pour les actions non bloquantes, comme le démarrage du serveur alors qu’aucun utilisateur n’est connecté.
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Gestion des modules
+### Gestion des événements
+### Gestion des *streams*
+### Gestion des fichiers
+]
+.col-droite[
+
+Ouvrir un fichier :
+- méthode `open()`
+- paramètres : chemin, mode d’ouverture, *callback*
+- retourne un descripteur de fichier
+
+```
+fs.open('./lamia.txt', 'r', (error, fd) => console.log(fd));
+```
+
+|Mode|decsription|
+|:-:|-|
+|`r`|Lecture seule, le fichier doit exister.|
+|`r+`|Lecture et écriture, le fichier doit exister.|
+|`w`|Écriture seule, le fichier est créé ou écrasé s’il existe.|
+|`w+`|Lecture et écriture, le fichier est créé ou écrasé s’il existe.|
+|`a`|Mode ajout, le fichier est créé ou modifié s’il existe.|
+|`a+`|Lecture et ajout, le fichier est créé ou modifié s’il existe.|
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Gestion des modules
+### Gestion des événements
+### Gestion des *streams*
+### Gestion des fichiers
+]
+.col-droite[
+
+Fermer un fichier :
+- méthode `close()`
+- paramètres : descripteur de fichier, *callback*
+
+```
+fs.open('./lamia.txt', 'r', (error, fd) => {
+  if (error) console.log(error);
+  else console.log(fd);
+  fs.close(fd, (error) => {
+    if (error) console.log(error);
+    else console.log('Fichier fermé')
+  });
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Gestion des modules
+### Gestion des événements
+### Gestion des *streams*
+### Gestion des fichiers
+]
+.col-droite[
+
+Lire un fichier en totalité :
+- méthode `readFile()`
+- paramètres : chemin, options, *callback*
+
+```
+const options = {
+  flag: 'r+',
+  encoding: 'utf8'
+}
+
+fs.readFile('./lamia.txt', options, (error, data) => {
+  console.log(data);
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Gestion des modules
+### Gestion des événements
+### Gestion des *streams*
+### Gestion des fichiers
+]
+.col-droite[
+
+Lire partiellement un fichier :
+- méthode `read()`
+- paramètres : descripteur, *buffer*, position dans le *buffer*, nb octets à lire, position dans le fichier, *callback*
+
+```
+fs.open('./lamia.txt', 'r', (error, fd) => {
+  const buffer = new Buffer.alloc(100);
+  fs.read(fd, buffer, 0, buffer.length, 0, (error, bytesRead, data) => {
+    console.log(`Octets lus : ${ bytesRead }`);
+    console.log(data.toString());
+  });
+});
+
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Gestion des modules
+### Gestion des événements
+### Gestion des *streams*
+### Gestion des fichiers
+]
+.col-droite[
+
+Écrire dans un fichier :
+- méthode `writeFile()`
+- paramètres : nom du fichier, octets encodés en UTF-8 par défaut, *callback*
+
+```
+const data = 'C’est un trou de verdure où chante une rivière\n\
+Accrochant follement aux herbes des haillons\n\
+D’argent ; où le soleil, de la montagne fière,\n\
+Luit : c’est un petit val qui mousse de rayons.\n';
+
+fs.writeFile('./rimbaud.txt', data, (error) => {
+  if (error) console.log(error);
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Gestion des modules
+### Gestion des événements
+### Gestion des *streams*
+### Gestion des fichiers
+]
+.col-droite[
+
+Écrire à la fin d’un fichier :
+- méthode `appendFile()`
+- paramètres : nom du fichier, octets, *callback*
+
+```
+const data = 'Un soldat jeune, bouche ouverte, tête nue,\n';
+
+fs.appendFile('./rimbaud.txt', data, (error) => {
+  if (error) console.log(error);
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Gestion des modules
+### Gestion des événements
+### Gestion des *streams*
+### Gestion des fichiers
+]
+.col-droite[
+
+Dupliquer un fichier :
+
+```
+fs.link('./rimbaud.txt', './dormeur-du-val.txt', (error) => {
+  if (error) console.log(error);
+});
+```
+
+Supprimer un fichier :
+
+```
+fs.unlink('./rimbaud.txt', (error) => {
+  if (error) console.log(error);
+});
+```
+
+Renommer un fichier :
+
+```
+fs.rename('./dormeur-du-val.txt', 'dormeur-du-val_(rimbaud).txt', (error) => {
+  if (error) console.log(error);
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Gestion des modules
+### Gestion des événements
+### Gestion des *streams*
+### Gestion des fichiers
+]
+.col-droite[
+
+Créer un répertoire :
+
+```
+fs.mkdir('text', (error) => {
+  if (error) console.log(error);
+  else console.log('Répertoire créé.');
+});
+```
+
+Renommer un répertoire :
+
+```
+fs.rename('text', 'texts', (error) => {
+  if (error) console.log(error);
+  else console.log('Répertoire renommé.');
+});
+```
+
+Supprimer un répertoire :
+
+```
+fs.rmdir('texts', (error) => {
+  if (error) console.log(error);
+  else console.log('Répertoire supprimé.');
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Gestion des modules
+### Gestion des événements
+### Gestion des *streams*
+### Gestion des fichiers
+]
+.col-droite[
+
+Lister les fichiers d’un répertoire :
+
+```
+fs.readdir('texts', (error, files) => {
+  if (error) console.log(error);
+  else console.log(files);
+});
+```
+
+Tester l’existence d’un répertoire (ou d’un fichier) :
+
+```
+fs.exists('text', (exists) => {
+  if (exists) console.log('Le répertoire existe.');
+  else console.log('Le répertoire n’existe pas.');
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Gestion des modules
+### Gestion des événements
+### Gestion des *streams*
+### Gestion des fichiers
+]
+.col-droite[
+
+Obtenir des informations sur un fichier (ou répertoire) :
+
+```
+fs.stat('./lamia.txt', (error, stat) => {
+  if (stat.isFile()) console.log(stat);
+});
+```
+
+Connecter deux *streams* de fichiers en lecture et en écriture :
+
+```
+const stream = require('stream');
+const fs = require('fs');
+
+const readstream = fs.createReadStream('./lamia.txt');
+const writestream = fs.createWriteStream('./keats.txt');
+
+stream.pipeline(readstream, writestream, (error) => {
+  if (error) console.log(error);
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Gestion des modules
+### Gestion des événements
+### Gestion des *streams*
+### Gestion des fichiers
+]
+.col-droite[
+
+Exemple de saisie au clavier enregistrée dans un fichier :
+
+```
+const stream = require('stream');
+const fs = require('fs');
+
+const readstream = process.stdin;
+const writestream = fs.createWriteStream('./poem.txt');
+
+// enregistrement au fur et à mesure de la saisie
+stream.pipeline(readstream, writestream, (error) => {
+  if (error) console.log(error);
+});
+
+// lecture du fichier à la fin
+readstream.on('data', (chunk) => {
+  chunk = chunk.toString().replace(/[\r\n]/g, '');
+  if (chunk == 'exit()') {
+    fs.readFile('./poem.txt', (error, data) => {
+      console.log(data.toString());
+      writestream.end();  // fermer le stream en écriture
+      readstream.pause(); // fermer le stream en lecture
+    });
+  }
+});
+```
+
+]
+
+???
+
+Ordre de fermeture des *streams* important
