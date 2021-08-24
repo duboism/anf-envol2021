@@ -25,6 +25,10 @@ switch ($f) {
     $t = 'Node.js, du JavaScript côté serveur';
     $l = 'js';
     break;
+  case 'node-web':
+    $t = 'Node.js pour le Web';
+    $l = 'js';
+    break;
   default:
     $t = 'Page d’accueil';
     $l = 'html';
