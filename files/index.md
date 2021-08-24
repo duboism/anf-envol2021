@@ -39,3 +39,10 @@ De la syntaxe générale à la gestion de fonctions asynchrones en passant par l
 
 Découverte de la plateforme logicielle qui permet d’exécuter du JavaScript côté serveur.  
 [==> Voir le diaporama](./?f=node)
+
+---
+
+### Node.js pour le Web
+
+Exploration des techniques de Node.js pour la communication sur le Web.
+[==> Voir le diaporama](./?f=node-web)
