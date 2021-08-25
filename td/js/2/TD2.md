@@ -1,8 +1,8 @@
 # Une liste de publications sur HAL
 
 L’objectif de ce second TD sera pour vous de récupérer une liste de publications à la saisie de tout IdHAL dans le formulaire HTML. Vous mettrez également en place un système de pagination simplifié afin de n’afficher qu’un certain nombre de références à la fois.
-La mise en place de la chaîne de traitement vous amènera à manipuler l’API *Fetch* et la mécanique des *Promises* dans une logique de code asynchrone.
-**URL de l’API de recherche de HAL :** https://api.archives-ouvertes.fr/search/
+La mise en place de la chaîne de traitement vous amènera à manipuler l’API *Fetch* et la mécanique des *Promises* dans une logique de code asynchrone.  
+**URL de l’API de recherche de HAL :** https://api.archives-ouvertes.fr/search/  
 **Documentation :** https://api.archives-ouvertes.fr/docs/search/
 
 ## Définir les objectifs
@@ -30,7 +30,9 @@ La réponse est toujours au format JSON :
 ### Le code de départ
 
 Le code de départ n’est plus tout à fait le même depuis le dernier TD. Vous le trouverez comme précédemment dans le dossier *debut*. La page *index.html* es agrémentée de quelques blocs pour accueillir la liste des documents ainsi que la pagination.
+
 Dans le même dossier, un script à compléter *api-hal.js* reprend les apports du premier TD avec toutefois quelques aménagements pour vous permettre de ne vous concentrer que sur la mise en place de la chaîne de traitement.
+
 Remarquez en tête l’objet `config`, composé de propriétés initialisées avec des valeurs par défaut (la plupart vides). Attendez-vous à interagir fréquemment avec cet objet dans toutes les fonctions et procédures que vous écrirez.
 
 ### Conception du script
@@ -100,6 +102,7 @@ function getDocs(e) {
 ## Étape 4 : afficher les documents
 
 La fonction `printDocs()` se charge de construire une liste à puces HTML et de placer à l’intérieur de chaque item la référence d’un document. Il est nécessaire à cette étape de savoir comment récupérer ces informations depuis le document JSON fourni par l’API HAL. La documentation officielle ou un `console.log()` vous apprennent que la liste des documents est disponible sous `response.docs` et que, pour chacun, la référence est enregistrée avec la propriété `label_s`. En résumé, pour atteindre la première référence, vous devriez interroger : `response.docs[0].label_s`.
+
 Commencez par récupérer la liste des documents :
 
 ```js
@@ -179,6 +182,7 @@ function getDocs(e) {
 ## Un point final ?
 
 Votre application n’est pas tout à fait terminée. Si la pagination s’affiche bien et que le mécanisme de clic est actif sur chaque numéro de page, la liste des publications ne change pas. Rien de plus normal : aucune ligne de code ne modifie jusqu’à présent la propriété `config.start`.
+
 Demandez à la fonction `toPage()` de le faire pour vous :
 
 ```js
