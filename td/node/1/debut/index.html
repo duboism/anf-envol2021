@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+  <title>S’inscrire au colloque</title>
+</head>
+<body>
+  <div class="container-fluid">
+    <h1 class="display-2">Inscription</h1>
+    <p>Les inscriptions sont ouvertes jusqu’au 15 mai 2020, date impérative. Une fois validée, il vous sera demandé de vous acquitter des frais d’inscriptions qui s’élèvent à 250 €. Tous les champs sont obligatoires.</p>
+    <form action="./inscription" method="post" name="form-inscription">
+      <div class="row">
+        <div class="col">
+          <fieldset class="border rounded bg-light p-2">
+            <legend>Identité</legend>
+            <div class="mb-3">
+              <label for="nom" class="visually-hidden">Nom :</label>
+              <input type="text" name="nom" id="nom" class="form-control" required="required" placeholder="Nom" />
+            </div>
+            <div class="mb-3">
+              <label for="prenom" class="visually-hidden">Prénom :</label>
+              <input type="text" name="prenom" id="prenom" class="form-control" required="required" placeholder="Prénom" />
+            </div>
+            <div class="mb-3">
+              <label for="email" class="visually-hidden">Adresse mail :</label>
+              <div class="input-group">
+                <div class="input-group-text">@</div>
+                <input type="text" name="email" class="form-control" id="email" placeholder="Adresse email" required="required">
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="col">
+          <fieldset class="border rounded bg-light p-2">
+            <legend>Informations professionnelles</legend>
+            <div class="mb-3">
+              <label for="statut" class="visually-hidden">Statut :</label>
+              <select id="statut" name="statut" class="form-select">
+                <option selected="selected">Statut…</option>
+                <option value="c">Chercheur·euse</option>
+                <option value="e">Enseignant·e</option>
+                <option value="d">Doctorant·e</option>
+                <option value="i">Ingénieur·e</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="affiliation" class="visually-hidden">Affiliation :</label>
+              <input type="text" name="affiliation" id="affiliation" placeholder="Affiliation" class="form-control" required="required" />
+              <small class="form-text">Établissement scientifique, université, entreprise…</small>
+            </div>
+          </fieldset>
+          <div class="text-end">
+            <button type="submit" class="btn btn-primary">S’enregistrer</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
