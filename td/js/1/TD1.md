@@ -1,13 +1,14 @@
 # Découverte de l’API HAL
 
 Dans ce premier TD, vous vous familiariserez avec l’API de recherche de HAL. Cette application permet d’effectuer une recherche dans la base de données de [HAL](https://halshs.archives-ouvertes.fr/) à partir d’une requête HTTP de type `GET`.
-Au fil des étapes, vous serez amené·es à concevoir un script qui récupère une entrée utilisateur dans un formulaire HTML (un IdHAL) et qui le soumet à l’API HAL via l’interface *Fetch* pour finalement analyser la réponse au format JSON et en extraire le nombre de documents de l’auteur ou de l’autrice mentionné·e. Le tout, sans recharger la page.
-**URL de l’API de recherche de HAL :** https://api.archives-ouvertes.fr/search/
+Au fil des étapes, vous serez amené·es à concevoir un script qui récupère une entrée utilisateur dans un formulaire HTML (un IdHAL) et qui le soumet à l’API HAL via l’interface *Fetch* pour finalement analyser la réponse au format JSON et en extraire le nombre de documents de l’auteur ou de l’autrice mentionné·e. Le tout, sans recharger la page.  
+**URL de l’API de recherche de HAL :** https://api.archives-ouvertes.fr/search/  
 **Documentation :** https://api.archives-ouvertes.fr/docs/search/
 
 ## HAL en bref
 
 HAL est un acronyme qui signifie "Hyper Articles en Ligne". Il s'agit d'une archive ouverte maintenue par le CCSD (Centre pour la communication scientifique directe) où l'on peut déposer des documents scientifiques comme des références bibliographiques.
+
 Le CCSD distribue plusieurs APIs pour interagir avec ses données, que ce soit avec son outil de recherche ou avec ses référentiels (auteurs, structures, projets…).
 
 ## Définir les objectifs
@@ -33,6 +34,7 @@ Remarquez tout de suite que la valeur à récupérer est assignée à la propri�
 ### Le code de départ
 
 Dans le dossier *debut*, vous trouverez une page nommée *index.html*. Il s’agit d’un formulaire très simple avec un champ de saisie pour l’IdHAL. Notez la ligne en dessous, censée accueillir le nombre de publications (références et documents confondus).
+
 Parmi les choses remarquables dans le code, notons :
 - la balise `<script>` qui, contrairement à l’usage, figure dans l’en-tête de la page ;
 - l’identifiant du champ de saisie (`IdHAL`) ;
@@ -70,6 +72,7 @@ Si vous exécutez votre script, un écueil se présente à vous. Une exception e
 ## Lancer le script au chargement de la page
 
 La raison de la survenue de ce problème est simple : la balise `<script>` étant placée dans l’en-tête du document HTML, le code JS est interprété **avant** que les éléments du corps soient analysés par l’API DOM. La solution la plus simple reste de déplacer la balise `<script>` en bas du document HTML, juste avant la balise fermante `</body>`, comme le veut l’usage. Une solution plus conforme à la norme du W3C consiste à retarder l’exécution du code JS.
+
 Placez un écouteur sur la fenêtre du navigateur afin de déclencher une fonction `run()` lorsque le document HTML a fini d’être chargé :
 ```js
 window.addEventListener('load', run);
@@ -131,6 +134,7 @@ Puis fournissez à `nbPublis` la valeur de `numFound` :
 
 ### Une aide contextuelle
 Que se passe-t-il lorsque vous saisissez dans le formulaire un IdHAL qui n’existe pas ? Eh bien, le nombre de publications reste à zéro. Pourquoi ne pas indiquer à l’utilisateur qu’il a peut-être commis une erreur lors de sa saisie ?
+
 Ajoutez un bloc d’aide à la suite de la dernière colonne dans la page HTML et rendez-la invisible par défaut grâce à la classe utilitaire de *Bootstrap* `invisible` :
 ```html
 <div class="col-auto">
