@@ -198,7 +198,7 @@ server.listen(3000);
 ]
 .col-droite[
 
-Définir plusieurs points d’accès :
+Définir plusieurs routes d’accès :
 
 ```
 const http = require('http');
@@ -226,6 +226,176 @@ const server = http.createServer( (request, response) => {
 });
 
 server.listen(3000);
+```
+
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+- un serveur simple
+- servir une page Web
+]
+.col-droite[
+
+Définir des en-têtes pour le client :
+
+```
+const server = http.createServer( (request, response) => {
+
+  let filename = url.parse(request.url).pathname;
+
+  switch (filename) {
+    case '/': filename = './index.html'; break;
+    case '/aide': filename = './aide.html'; break;
+  }
+
+  fs.exists(filename, (exists) => {
+    const headers = {'Content-Type': 'text/html'};
+    if (!exists) {
+      filename = './404.html';
+      response.writeHead(404, headers);
+    }
+    else response.writeHead(200, headers);
+    let file = fs.createReadStream(filename);
+    stream.pipeline(file, response, (error) => {
+      if (error) console.log(error);
+    });
+  });
+
+});
+
+server.listen(3000);
+```
+
+]
+
+???
+
+Méthode `response.setHeader(name, value)` autrement
+
+---
+
+.col-gauche[
+### Connexions HTTP
+- un serveur simple
+- servir une page Web
+]
+.col-droite[
+
+.imp[Remarques :]
+- objet `response` = flux en écriture
+- flux à fermer par la méthode `end()`
+- méthode `end()` (ou pipeline…) déclenche événement `close`
+- Node.js envoie `close` en cas de problème (interruption de chargement, fermeture du navigateur…)
+- objet `server` déclenche aussi un événement `close` :
+  - avec méthode `close()`
+  - tout client connecté diffère la fermeture du serveur
+
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+- un serveur simple
+- servir une page Web
+- un client HTTP
+]
+.col-droite[
+
+#### Créer un client HTTP
+
+Pour se connecter à un serveur HTTP
+
+Méthode `http.request()` (ou `http.get()` si requête `GET`) :
+- paramètre `options` (`hostname`, `port`, `path` et `method`)
+- fonction *callback* avec paramètre `response` (flux en lecture)
+- objet `request` retourné :
+  - flux en écriture
+  - méthode `request.end()` pour le fermer et passer la main au serveur
+- événement `error` si échec fonction *callback*
+
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+- un serveur simple
+- servir une page Web
+- un client HTTP
+]
+.col-droite[
+
+```
+const http = require('http');
+
+const options = {
+  hostname: 'localhost',
+  port: 3000,
+  path: '/',
+  method: 'GET'
+}
+
+let buffer = String();
+
+const request = http.request(options, (response) => {
+  response.setEncoding('utf-8');
+  response.on('data', (chunk) => {
+    buffer += chunk;
+  });
+  response.on('end', () => {
+    console.log(chunk);
+  });
+});
+
+request.on('error', (error) => {
+  console.log(`Erreur dans la requête : ${ error.message }`);
+});
+
+request.end();
+```
+
+.legende[Exemple de client HTTP simple]
+
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+- un serveur simple
+- servir une page Web
+- un client HTTP
+]
+.col-droite[
+
+Méthode `http.get()` plus simple :
+- requête obligatoirement de type `GET`
+- flux en écriture automatiquement fermé
+
+```
+const http = require('http');
+
+const options = {
+  hostname: 'localhost',
+  port: 3000,
+  path: '/'
+}
+
+let buffer = String();
+
+const request = http.get(options, (response) => {
+  response.setEncoding('utf-8');
+  response.on('data', (chunk) => buffer += chunk );
+  response.on('end', () => console.log(buffer) )
+});
+
+request.on('error', (error) => {
+  console.log(`Erreur dans la requête : ${ error.message }`);
+});
 ```
 
 ]
