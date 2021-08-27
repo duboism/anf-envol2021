@@ -4,7 +4,9 @@ D’autres méthodes de connexion à un serveur existent en dehors de `GET`. Ce 
 
 La première partie du TD se consacre à paramétrer le serveur pour distribuer correctement les tâches aux différentes URLs appelées, quand la seconde partie est centrée sur la configuration d’un client HTTP qui envoie les données.
 
-## Présentation du site Web
+## Première partie : conception du serveur
+
+### Présentation du site Web
 
 Le site Web est constitué de trois pages HTML, présentes dans le dossier *debut* :
 - *index.html*, un formulaire d’inscription qui envoie à l’adresse `/inscription` ;
@@ -13,13 +15,13 @@ Le site Web est constitué de trois pages HTML, présentes dans le dossier *debu
 
 En plus de ces trois pages, vous trouverez un fichier au format CSV (*Comma-Separated Values*) qui contient la liste des inscrit·es au colloque avec un enregistrement par ligne au-delà de la ligne d’en-tête. Les informations recueillies sont celles du formulaire, dans l’ordre : nom, prénom, email, statut et affiliation.
 
-### Conception du serveur
+### Définition des missions dévolues au serveur
 
 Une fois configuré et prêt à l’écoute, deux missions importantes seront dévolues à votre serveur :
 1. servir les différents fichiers en fonction des routes ;
 2. mettre à jour le fichier *inscriptions.csv*.
 
-## Étape 1 : configurer un serveur prêt à écouter
+### Étape 1 : configurer un serveur prêt à écouter
 
 Pour cette première étape, configurez un serveur en écoute sur le port 3000 et qui ne s’occupe que d’une seule chose : afficher la page d’accueil.
 
@@ -50,7 +52,7 @@ $ node server.js
 ```
 Visitez à présent la page http://localhost:3000 qui devrait vous afficher le formulaire d’inscription.
 
-## Étape 2 : servir les différentes routes
+### Étape 2 : servir les différentes routes
 
 Trois cas de figures doivent être envisagés :
 - le cas normal où le formulaire est affiché ;
@@ -99,7 +101,7 @@ fs.exists(filename, (exists) => {
 });
 ```
 
-## Étape 3 : mettre à jour le fichier des inscriptions
+### Étape 3 : mettre à jour le fichier des inscriptions
 
 Pour mettre à jour le fichier des inscriptions, rien de bien compliqué : il s’agit simplement de savoir ajouter des données à un fichier existant. L’opération est réalisée avec la méthode `fs.appendFile()` :
 ```js
@@ -139,11 +141,94 @@ request.on('data', (chunk) => {
         const q = param.split('=');
         search += `${ decodeURIComponent(q[1]) }\t`;
     }
-    data = `${ search }\n`;
+    // remplacer dernière tabulation par retour à la ligne
+    data = `${ search.slice(0, -1) }\n`;
     fs.appendFile('./inscriptions.csv', data, (error) => {
         if (error) console.log(error);
     });
 });
 ```
 
-Vous trouverez le code final des documents HTML et JavaScript dans le dossier *fin* de ce premier TD.
+## Seconde partie : un client HTTP personnalisé
+
+Un navigateur Web n’est rien de plus qu’un client HTTP qui transmet des informations à un serveur HTTP. Lorsque le formulaire est soumis, les données sont acheminées au serveur qui les traite ensuite. Il est donc possible de paramétrer soi-même un programme qui exécute les mêmes tâches en se passant de navigateur.
+
+Dans le dossier *debut*, ouvrez le fichier *client.js* afin d’écrire le code à l’intérieur. Avant de commencer, notez bien que le serveur doit être lancé afin que le client puisse se connecter. D’un côté, vous exécuterez dans un terminal la commande :
+```shell
+$ node server.js
+```
+Et dans une autre fenêtre :
+```shell
+$ node client.js
+```
+
+### Étape 1 : paramétrer les options de connexion
+
+Après avoir inclus le module `http` :
+```js
+// module http
+const http = require('http');
+```
+
+Renseignez ensuite simplement les paramètres de la requête : adresse du serveur, chemin d’accès, méthode pour la requête et port de connexion :
+```js
+// options de connexion
+const options = {
+    hostname: 'localhost',
+    port: 3000,
+    path: '/inscription',
+    method: 'POST'
+}
+```
+
+### Étape 2 : définir les informations à envoyer
+
+Posez-vous la question : comment le serveur réceptionne-t-il les données ? Sous une forme textuelle, avec des paires `champ=valeur` séparés par le caractère `&`. Il s’agit par conséquent des informations à lui faire parvenir.
+
+Créez un objet `data` avec toutes les informations désirées :
+```js
+const data = {
+    nom: "Roulois",
+    prenom: "Alexandre",
+    email: "alexandre.roulois@u-paris.fr",
+    statut: "i",
+    affiliation: "LLF"
+};
+```
+
+Et formatez correctement une chaîne de caractères à partir de cet objet :
+```js
+let query = String();
+for (const prop in data) {
+    query += `${prop}=${data[prop]}&`;
+}
+// supprimer dernière tabulation
+query = query.slice(0, -1);
+```
+
+### Étape 3 : émettre le flux en écriture
+
+Dernière étape, la construction de la requête HTTP grâce à la méthode `http.request()` :
+```js
+const request = http.request(options, (response) => {
+    console.log("Informations envoyées !");
+    console.log(response.statusCode);
+});
+```
+N’oubliez pas de gérer les erreurs éventuelles :
+```js
+request.on('error', (error) => {
+  console.log(`Erreur dans la requête : ${ error.message }`);
+});
+```
+
+Et fermez à présent le flux en écriture en transmettant la requête :
+```js
+request.end(query);
+```
+
+## Pour aller plus loin
+
+La configuration de cette architecture client-serveur est loin d’être parfaite. D’une part, même si vous avez défini, parmi les options de connexion, le chemin d’accès `/inscription`, vous aurez remarqué que, côté serveur, l’événement `data` est déclenché quelle que soit la route depuis laquelle les données sont envoyées ; d’autre part, les informations transmises par le client HTTP sont fixes. Plutôt que de modifier le client pour chaque donnée à transmettre, il aurait été plus approprié de demander au client de saisir lui-même ses informations en lui posant des questions via le terminal. N’hésitez pas à tenter l’opération en combinant l’écoute du processus `process.stdin` pour les entrées clavier et la mise en place d’un flux `Duplex` pour gérer à la fois l’écriture et la lecture.
+
+**Vous trouverez le code final des documents HTML et JavaScript dans le dossier *fin* de ce premier TD.**

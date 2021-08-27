@@ -38,7 +38,7 @@ const server = http.createServer( (request, response) => {
       const q = param.split('=');
       search += `${ decodeURIComponent(q[1]) }\t`;
     }
-    data = `${ search }\n`;
+    data = `${ search.slice(0, -1) }\n`;
     fs.appendFile('./inscriptions.csv', data, (error) => {
       if (error) console.log(error);
     });

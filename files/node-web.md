@@ -347,7 +347,7 @@ const request = http.request(options, (response) => {
     buffer += chunk;
   });
   response.on('end', () => {
-    console.log(chunk);
+    console.log(buffer);
   });
 });
 

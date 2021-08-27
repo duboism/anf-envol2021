@@ -194,4 +194,4 @@ idHal.addEventListener('click', eraseField);
 ```
 Remarquez au passage que le code prévoit la suppression, toujours au clic, de la saisie utilisateur.
 
-Vous trouverez le code final des documents HTML et JavaScript dans le dossier *fin* de ce premier TD.
+**Vous trouverez le code final des documents HTML et JavaScript dans le dossier *fin* de ce premier TD.**
