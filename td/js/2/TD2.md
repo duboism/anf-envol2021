@@ -191,4 +191,4 @@ config.start = (e.target.innerText - 1) * 30;
 
 L’application, loin d’être parfaite, est tout de même bien aboutie. Parmi les améliorations envisageables, vous pourriez par exemple griser la page consultée, élaborer un mécanisme de "page précédente", "page suivante", permettre à l’utilisateur de modifier le nombre de résultats visibles…
 
-Vous trouverez le code final des documents HTML et JavaScript dans le dossier *fin* de ce second TD.
+**Vous trouverez le code final des documents HTML et JavaScript dans le dossier *fin* de ce second TD.**
