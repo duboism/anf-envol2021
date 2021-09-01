@@ -12,7 +12,9 @@ Alexandre Roulois (Université de Paris, LLF, CNRS)
   - servir une page Web statique
   - créer un client HTTP
 - Les *web sockets*
-- Le module *Connect*
+  - émettre et recevoir des événements
+  - associer des données à une *socket*
+  - utiliser les espaces de nommage
 
 ---
 
@@ -396,6 +398,267 @@ const request = http.get(options, (response) => {
 request.on('error', (error) => {
   console.log(`Erreur dans la requête : ${ error.message }`);
 });
+```
+
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+### Web sockets
+]
+.col-droite[
+
+.imp[Web socket :] communication client-serveur facilitée
+- module `socket.io`
+- installer avec `npm`
+- client toujours à la demande de la communication
+- programme client JS intégré dans une page HTML
+- programme serveur Node
+
+```html
+<!-- page HTML -->
+<head>
+  …
+  <!-- module socket.io client -->
+  <script type="text/javascript" src="./socket.io/socket.io.js"></script>
+  <script type="text/javascript">
+    // instructions
+  </script>
+  …
+</head>
+```
+
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+### Web sockets
+- émettre et recevoir
+]
+.col-droite[
+
+#### Émettre et recevoir des événements
+
+- méthode `emit()` pour émettre
+- méthode `on()` pour recevoir
+  - *callback* pour traiter données reçues
+
+Programme côté client (page HTML) :
+
+```
+// création socket
+const socket = io('http://localhost:3000');
+
+// émission événement "hello" vers serveur
+socket.emit('hello', 'Hello Server!');
+
+// réception événement "helloBack" en provenance du serveur
+socket.on('hello back', (data) => {
+  console.log(data);
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+### Web sockets
+- émettre et recevoir
+]
+.col-droite[
+
+Programme côté serveur :
+```
+const http = require('http');
+const fs = require('fs');
+const stream = require('stream');
+
+// serveur renvoie page index.html
+const server = http.createServer( (request, response) => {
+  const index = fs.createReadStream('./index.html');
+  stream.pipeline(index, response, (error) => {
+    if (error) console.log(error);
+  });
+} );
+
+// module socket.io attaché au serveur
+const io = require('socket.io')(server);
+
+io.on('connection', (socket) => {
+  // réception événément "hello"
+  socket.on('hello', (data) => {
+    console.log(data);
+  });
+  // émission événément "helloBack"
+  socket.emit('hello back', 'Hello Client!');
+});
+
+// port d'écoute
+server.listen(3000);
+```
+
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+### Web sockets
+- émettre et recevoir
+]
+.col-droite[
+
+Événement `connect` côté client :
+```
+socket.on('connect', () => {
+  console.log(`Socket connecté avec l’identifiant ${ socket.id }`);
+});
+```
+
+Événements `connection` et `disconnect` côté serveur :
+
+```
+io.on('connection', (socket) => {
+
+  console.log('Un client s’est connecté.');
+
+  socket.on('disconnect', (reason) => {
+    console.log(reason);
+  });
+
+});
+```
+
+Causes déconnexion : *io server disconnect*, *io client disconnect*, *ping timeout*, *transport close*, *transport error*
+
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+### Web sockets
+- émettre et recevoir
+]
+.col-droite[
+
+Émettre et recevoir plusieurs données :
+```
+// côté client
+socket.emit('hello', 'Hello Server!', { name: "Alexandre" });
+```
+
+```
+// côté serveur
+socket.on('hello', (data, person) => {
+  console.log(data);
+  console.log(`${ person.name } s’est connecté au serveur.`);
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+### Web sockets
+- émettre et recevoir
+- associer données
+]
+.col-droite[
+
+*Sockets* sont des objets manipulables :
+```
+// côté client
+socket.emit('set person', {
+  name: "Alexandre",
+  lab: "LLF"
+});
+
+// côté serveur
+// associer aux propriétés de la socket
+socket.on('set person', (data) => {
+  socket.name = data.name;
+  socket.lab = data.lab;
+});
+// accéder aux propriétés de la socket
+socket.on('disconnect', (reason) => {
+  console.log(`${ socket.name } du ${ socket.lab } vient de se déconnecter.`);
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+### Web sockets
+- émettre et recevoir
+- associer données
+- espaces de nommage
+]
+.col-droite[
+
+Associer des événements à une *socket* particulière
+
+Côté client :
+```
+// espace de nommage "chat"
+const chat = io('http://localhost:3000/chat');
+
+// réception événement "message" sur socket "chat"
+chat.on('message', (data) => {
+  console.log(data);
+});
+```
+
+Côté serveur :
+
+```
+// définir espace de nommage
+const chat = io.of('/chat');
+
+// émission dans la socket "chat"
+chat.on('connection', (socket) => {
+  socket.emit('message', 'Hello Client!')
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+### Web sockets
+- émettre et recevoir
+- associer données
+- espaces de nommage
+]
+.col-droite[
+
+Chaque espace de nommage dispose de :
+- ses propres événements
+- ses propres salles
+
+```
+const chat = io.of('/chat');
+
+// à la connexion
+chat.on('connection', (socket) => {
+  // rejoindre salle 2
+  socket.join('salle2');
+  // message aux salles 1 et 2
+  io.to(['salle1', 'salle2']).emit('hello', 'Hello Client!');
+}
 ```
 
 ]
