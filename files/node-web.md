@@ -15,6 +15,7 @@ Alexandre Roulois (Université de Paris, LLF, CNRS)
   - émettre et recevoir des événements
   - associer des données à une *socket*
   - utiliser les espaces de nommage
+- Aperçu du module *Connect*
 
 ---
 
@@ -659,6 +660,170 @@ chat.on('connection', (socket) => {
   // message aux salles 1 et 2
   io.to(['salle1', 'salle2']).emit('hello', 'Hello Client!');
 }
+```
+
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+### Web sockets
+### Module *Connect*
+]
+.col-droite[
+
+Module externe `connect` pour ajouter des fonctionnalités à la méthode `http.createServer()`
+- plusieurs fonctions *callbacks*
+- fonction `next()` pour les enchaîner
+- intégrer des *middlewares*
+
+Installer avec :
+```shell
+$ npm install connect
+```
+
+Un serveur de base :
+```
+// module
+const connect = require('connect');
+
+// application (serveur)
+const app = connect();
+
+// écoute le port 3000
+app.listen(3000);
+```
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+### Web sockets
+### Module *Connect*
+]
+.col-droite[
+
+.imp[*Middleware* :] programme informatique qui assure la communication entre des applications disparates
+
+Méthode `app.use()` pour définir un *middleware* :
+```
+// middleware qui répond à toutes les requêtes
+app.use( (req, res) => {
+  // flux en écriture
+  res.end('Hello Client!');
+});
+```
+
+Fonction `next()` pour enchaîner les *callbacks* :
+```
+app.use( (req, res, next) => {
+  // flux en écriture (début)
+  res.write('Hello Client!\n');
+  next();
+});
+
+app.use( (req, res) => {
+  // flux en écriture (fin)
+  res.end('This is a middleware.');
+});
+```
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+### Web sockets
+### Module *Connect*
+]
+.col-droite[
+
+Un *middleware* peut-être défini pour une route précise :
+
+```
+app.use('/home', (req, res) => {
+  res.end('Hello Client!\n');
+});
+
+app.use('/chat', (req, res) => {
+  res.end('Welcome to the chat!');
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+### Web sockets
+### Module *Connect*
+]
+.col-droite[
+
+Pratique courante : *middleware* dans un fichier externe
+
+```
+// fichier home/index.js
+const fs = require('fs');
+const stream = require('stream');
+
+function home(req, res) {
+  const file = fs.createReadStream('./index.html');
+  stream.pipeline(file, res, (error) => {
+    if (error) console.log(error);
+  });
+};
+
+module.exports = home;
+```
+
+Appelé comme module :
+
+```
+const home = require('home');
+
+app.use('/home', home);
+```
+
+]
+
+---
+
+.col-gauche[
+### Connexions HTTP
+### Web sockets
+### Module *Connect*
+]
+.col-droite[
+
+Pour transmettre des paramètres au *middleware* :
+
+```
+// fichier utils/index.js
+const fs = require('fs');
+const stream = require('stream');
+
+function loadFile(filename) {
+  return (req, res) => {
+    const file = fs.createReadStream(filename);
+    stream.pipeline(file, res, (error) => {
+      if (error) console.log(error);
+    });
+  };
+};
+
+module.exports.loadFile = loadFile;
+```
+
+Appel dans le fichier principal :
+
+```
+const utils = require('utils');
+
+app.use('/home', utils.loadFile('./index.html'));
 ```
 
 ]

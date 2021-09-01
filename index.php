@@ -5,6 +5,14 @@ $f = isset($_SERVER['QUERY_STRING'])
   : 'index';
 
 switch ($f) {
+  case 'css':
+    $t = 'Les fondamentaux de CSS3';
+    $l = 'css';
+    break;
+  case 'express':
+    $t = 'Une application Web avec Express.js';
+    $l = 'js';
+    break;
   case 'html':
     $t = 'Les fondamentaux du HTML5';
     $l = 'html';
@@ -12,10 +20,6 @@ switch ($f) {
   case 'http':
     $t = 'Le protocole HTTP';
     $l = 'html';
-    break;
-  case 'css':
-    $t = 'Les fondamentaux de CSS3';
-    $l = 'css';
     break;
   case 'js':
     $t = 'JavaScript pour le Web';

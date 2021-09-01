@@ -44,7 +44,12 @@ Découverte de la plateforme logicielle qui permet d’exécuter du JavaScript c
 
 ### Node.js pour le Web
 
-Exploration des techniques de Node.js pour la communication sur le Web.
+Exploration des techniques de Node.js pour la communication sur le Web.  
 [==> Voir le diaporama](./?f=node-web)
 
 - [TD 1 (PDF)](./td/node/1/TD1.pdf)
+
+### Express.js
+
+Comment construire une application Web avec le cadriciel Express.js.  
+[==> Voir le diaporama](./?f=express)
