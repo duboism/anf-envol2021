@@ -4,13 +4,15 @@ Grâce au module *Connect*, vous allez revoir le script élaboré au précédent
 
 ## Présentation du code de départ
 
-Dans le dossier *debut*, vous trouverez l’ensemble des fichiers sur lesquels vous travaillerez. Les deux fichiers HTML constituent le mini site Web :
+Dans le dossier *debut*, vous trouverez l’ensemble des fichiers sur lesquels vous travaillerez. Les trois fichiers HTML constituent le mini site Web :
 - *index.html*, le formulaire d’inscription qui envoie à l’adresse `/inscription` ;
-- *confirmation.html*, la page de confirmation de la prise en compte de l’inscription au colloque.
+- *confirmation.html*, la page de confirmation de la prise en compte de l’inscription au colloque ;
+- *404.html*, une page qui s’affichera pour toute mauvaise route empruntée.
 
-Les deux autres fichiers sont :
+Les trois autres fichiers sont :
 - Un fichier au format CSV (*Comma-Separated Values*) qui contient la liste des inscrit·es au colloque avec un enregistrement par ligne au-delà de la ligne d’en-tête. Les informations recueillies sont celles du formulaire, dans l’ordre : nom, prénom, email, statut et affiliation.
-- Un fichier *server.js* dans lequel vous interviendrez.
+- Un fichier *server.js* dans lequel vous paramétrerez votre serveur.
+- Un fichier *index.js* dans lequel vous écrirez vos fonctions utilitaires.
 
 ## Conception du serveur
 
@@ -45,6 +47,8 @@ app.use('/home', …);
 app.use('/inscription', …);
 // charger la page de confirmation
 app.use('/inscription', …);
+// autrement, charger la page 404
+app.use(…);
 ```
 
 À cette étape, il peut être intéressant de faire preuve d’anticipation en prévoyant la création d’un module personnalisé *utils* qui contienne :
@@ -63,13 +67,14 @@ const app = connect();
 app.use('/home', utils.loadFile('./index.html') );
 app.use('/inscription', utils.register('./inscription.csv'));
 app.use('/inscription', utils.loadFile('./confirmation.html'));
+app.use(utils.loadFile('./404.html'));
 
 app.listen(3000);
 ```
 
 ### Étape 2 : un *middleware* pour afficher un fichier HTML
 
-Avant toute chose, créez un sous-répertoire *utils* dans le répertoire *node_modules*, puis ajoutez à l’intérieur un fichier `index.js` dans lequel vous écrirez le code de votre fonction `loadFile()` qui sera chargée d’afficher un fichier HTML. Prévoyez que cette fonction accepte un paramètre `filename` :
+Avant toute chose, créez un sous-répertoire *utils* dans le répertoire *node_modules*, puis ajoutez à l’intérieur le fichier `index.js` dans lequel vous écrirez le code de votre fonction `loadFile()` qui sera chargée d’afficher un fichier HTML. Prévoyez que cette fonction accepte un paramètre `filename` :
 ```js
 function loadFile(filename) {
     // instructions

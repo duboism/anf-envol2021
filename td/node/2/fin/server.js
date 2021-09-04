@@ -19,8 +19,13 @@ app.use('/home', utils.loadFile('./index.html') );
 
 // 1. enregistrement
 app.use('/inscription', utils.register('./inscription.csv'));
-// 2. rmessage de confirmation
+// 2. message de confirmation
 app.use('/inscription', utils.loadFile('./confirmation.html'));
+
+/*
+*   mauvaises routes
+*/
+app.use( utils.loadFile('./404.html') )
 
 
 // port d'écoute
