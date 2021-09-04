@@ -86,6 +86,29 @@ undefined
 
 .col-gauche[
 ### Présentation
+]
+.col-droite[
+
+Démon Node pour mise à jour en temps réel du serveur
+
+Installation :
+
+```shell
+$ npm install -g nodemon
+```
+
+Lancer un serveur :
+
+```shell
+$ nodemon server.js
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
 ### Gestion des modules
 - charger
 ]
