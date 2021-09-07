@@ -14,7 +14,11 @@ Alexandre Roulois (Université de Paris, LLF, CNRS)
   - générer le squelette d’une application
   - architecture d’une application
   - *postman*, un service pour tester ses requêtes
-- Écrire des vues avec PUG
+- Écrire des vues avec Pug
+  - intégrer des éléments
+  - intégrer des attributs
+  - intégrer du texte
+  - intégrer du code JS
 
 ---
 
@@ -218,8 +222,8 @@ Modifier `scripts.start` dans *package.json* pour rendre compatible avec `nodemo
 - *views* : vues de l’application
 
 .imp[Remarque :]
-- vues au format *pug*, *jade* ou *ejs*
-- par défaut, aucun modèle défini
+- vues au format *Pug*, *Jade*, *Hogan* ou *EJS*
+- par défaut, aucun modèle (BDD) défini
 ]
 
 ]
@@ -242,3 +246,244 @@ Service [*Postman*](https://postman.co) pour tester API :
 .img-large[![de](./pics/express-fig1.png)]
 
 ]
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+]
+.col-droite[
+
+.imp[*Pug* :] langage de templating
+
+Successeur de *Jade*
+
+Installation :
+```shell
+$ npm install --save pug
+```
+
+Définir paramètre dans `app.js` :
+```
+app.set('view engine', 'pug')
+```
+
+Référence complète :  
+https://pugjs.org/language/tags.html
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+- éléments
+]
+.col-droite[
+
+#### Intégrer des éléments
+
+Succession d’éléments :
+
+.colonne[
+```txt
+div
+p Hello World!
+```
+]
+.colonne[
+```html
+<div></div>
+<p>Hello World</p>
+```
+]
+
+Imbrication :
+
+.colonne[
+```txt
+div
+  p Hello World!
+```
+]
+.colonne[
+```html
+<div>
+  <p>Hello World</p>
+</div>
+```
+]
+
+Imbrication en une ligne :
+
+.colonne[
+```txt
+div: p Hello World!
+```
+]
+.colonne[
+```html
+<div>
+  <p>Hello World</p>
+</div>
+```
+]
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+- éléments
+- attributs
+]
+.col-droite[
+
+#### Intégrer des attributs
+
+Attribut unique :
+.colonne[
+```txt
+a(href="https://u-paris.fr") Hello UP!
+```
+]
+.colonne[
+```html
+<a href="https://u-paris.fr">Hello UP!</a>
+```
+]
+
+Attributs multiples :
+.colonne[
+```txt
+input(
+  type="checkbox"
+  name="pug"
+  checked
+)
+```
+]
+.colonne[
+```html
+<input type="checkbox" name="pug" checkbox="checkbox" />
+```
+]
+
+Classes CSS et identifiants :
+
+.colonne[
+```txt
+p.lead
+  a#link-up(href="https://u-paris.fr") Hello UP!
+```
+]
+.colonne[
+```html
+<p class="lead">
+  <a id="link-up" href="https://u-paris.fr">Hello UP!</a>
+</p>
+```
+]
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+- éléments
+- attributs
+- texte
+]
+.col-droite[
+
+#### Intégrer du texte
+
+Texte brut :
+
+.colonne[
+```txt
+p Hello World!
+```
+]
+.colonne[
+```html
+<p>Hello World!</p>
+```
+]
+
+Avec des balises imbriquées :
+.colonne[
+```txt
+p Hello <b>World</b>!
+```
+]
+.colonne[
+```html
+<p>Hello <b>World</b>!</p>
+```
+]
+
+Contrôler le flux du texte :
+.colonne[
+```txt
+p
+  | Lorem ipsum dolor sit amet
+  | [#em consectetur adipiscing] elit.
+```
+]
+.colonne[
+```html
+<p>Lorem ipsum dolor sit amet <em>consectetur adipiscing</em> elit.</p>
+```
+]
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+- éléments
+- attributs
+- texte
+- code JS
+]
+.col-droite[
+
+#### Intégrer du code JS
+
+Code précédé du signe `-` :
+.colonne[
+```txt
+-
+  const ingredients = [
+    "Menthe", "Rhum", "Citron vert",
+    "Sucre de canne", "San Pellegrino"
+  ]
+ul
+  each item in ingredients
+    li= item
+```
+]
+.colonne[
+```html
+<ul>
+  <li>Menthe</li>
+  <li>Rhum</li>
+  <li>Citron vert</li>
+  <li>Sucre de canne</li>
+  <li>San Pellegrino</li>
+</ul>
+```
+]
+
+]
+
+
