@@ -19,6 +19,11 @@ Alexandre Roulois (Université de Paris, LLF, CNRS)
   - intégrer des attributs
   - intégrer du texte
   - intégrer du code JS
+- Routage des requêtes
+  - emprunter une route avec des méthodes
+  - transmettre des données comme variables
+  - analyser la requête du client
+  - manipuler la réponse du serveur
 
 ---
 
@@ -486,4 +491,376 @@ ul
 
 ]
 
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+### Routage des requêtes
+- méthodes
+]
+.col-droite[
+
+#### Emprunter une route avec des méthodes
+
+Les routes sont définies par un chemin :
+- `/` pour la racine
+- `/admin`
+- `/users/list`
+- …
+
+Et sont appelées par une méthode (`verb`) :
+- `GET` (accéder)
+- `POST` (ajouter)
+- `PUT` (modifier)
+- `DELETE` (supprimer)
+
+]
+
+???
+
+Il existe d'autres `verbs`
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+### Routage des requêtes
+- méthodes
+]
+.col-droite[
+
+Méthode `app.use()` prend deux arguments :
+- la route
+- le *handler* (fonction de *callback*)
+
+`app.use()` pour toutes les méthodes :
+
+```
+// peu importe la méthode, fonctionne sur la page d'index
+app.use('/', (req, res, next) => {
+  res.write('Hello');
+  next();
+});
+// peu importe la route, peu importe la méthode
+app.use((req, res) => {
+  res.end(' World!');
+});
+```
+
+.imp[Remarque :] *handler* prend deux paramètres (`req` et `res`) + fonction `next()` optionnelle pour transférer au *middleware* suivant.
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+### Routage des requêtes
+- méthodes
+]
+.col-droite[
+
+Méthodes spécifiques à un `verb` :
+```
+app.get('/users', (req, res) => {
+  res.end('Méthode get sur la route /users.');
+});
+app.post('/users', (req, res) => {
+  res.end('Méthode post sur la route /users.');
+});
+```
+
+Méthode `app.route()` pour enchaîner les méthodes :
+```
+// route /users
+app.route('/users')
+  // si méthode get
+  .get( (req, res) => {
+    res.end('Lister');
+  })
+  // si méthode post
+  .post( (req, res) => {
+    res.end('Ajouter');
+  })
+  // si méthode put
+  .put( (req, res) => {
+    res.end('Modifier');
+  });
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+### Routage des requêtes
+- méthodes
+]
+.col-droite[
+
+Expressions régulières autorisées dans une route :
+```
+app.get('/*list$', (req, res) => {
+  res.end('Toute route qui se termine par "list".')
+});
+app.get(/list/, (req, res) => {
+  res.end('Toute route avec "list" dedans/');
+});
+```
+
+Transmettre plusieurs *handlers* :
+```
+// premier gestionnaire
+const hello = (req, res, next) => {
+  res.write('Hello');
+  next();
+};
+
+// second gestionnaire
+const world = (req, res) => {
+  res.end(' World!');
+};
+
+// transmission des deux gestionnaires
+app.get('/', [hello, world]);
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+### Routage des requêtes
+- méthodes
+]
+.col-droite[
+
+Outrepasser l’interception par *Express.js* des erreurs 404 :
+```
+app.all(/.*/, (req, res) => {
+  res.status(404);
+  res.end('Erreur 404');
+});
+```
+
+Gestion des routes par *Express.js* dans modules séparés :
+```
+// app.js
+
+// charge module ./routes/users.js
+var usersRouter = require('./routes/users');
+// route /users gérée par le module déclaré plus haut
+app.use('/users', usersRouter);
+```
+
+```
+// module ./routes/users.js
+
+var router = express.Router();
+// pour la racine du module, à savoir la route /users
+router.get('/', (req, res) => {
+  res.end('Hello World!');
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+### Routage des requêtes
+- méthodes
+- paramètres
+]
+.col-droite[
+
+#### Définir des paramètres
+
+.imp[Paramètres :] données variables dans l’URL
+- introduits par la syntaxe `:parametre`
+  - `/user/:id`
+  - `/user/:userId/invoice/:invoiceID`
+- transmis avec la requête dans l’objet `req.params`
+
+```
+app.get('/user/:id', (req, res) => {
+  res.end(req.params.id);
+});
+```
+
+Si paramètre optionnel, utiliser `?` :
+```
+app.get('/users/:id?', (req, res) => {
+  // undefined si :id non fourni
+  res.end(req.params.id);
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+### Routage des requêtes
+- méthodes
+- paramètres
+- requête
+]
+.col-droite[
+
+#### Analyser la requête du client
+
+Objet `req` pour récupérer des informations sur la requête
+
+|Objet|Description|
+|:-:|-|
+|`req.query`|Contient les données transmises par la méthode `GET` (via un formulaire par exemple).|
+|`req.body`|Contient les données transmises par la méthode `POST` (via un formulaire par exemple).|
+|`req.params`|Contient les variables transmises dans l’URL de la route.|
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+### Routage des requêtes
+- méthodes
+- paramètres
+- requête
+]
+.col-droite[
+
+|Propriété|Description|
+|:-:|-|
+|`req.url`|Adresse URL utilisée, en incluant la partie `query` (ex. : `/users?nom=x`).|
+|`req.path`|URL sans la partie `query`.|
+|`req.method`|Méthode employée pour parvenir à la ressource.|
+|`req.ip`|Adresse IP de l’utilisateur.|
+|`req.protocol`|Protocole utilisé.|
+|`req.host`|Nom du serveur.|
+.legende[Propriétés pour interroger la route empruntée]
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+### Routage des requêtes
+- méthodes
+- paramètres
+- requête
+- réponse
+]
+.col-droite[
+
+#### Manipuler la réponse du serveur
+
+Objet `res` avec méthodes pour définir la manière dont le serveur répond
+
+|Méthode|Description|
+|:-:|-|
+|`res.download()`|Invite le client à télécharger un fichier.|
+|`res.end()`|Redonne la main au client en mettant un terme à la réponse.|
+|`res.json()`|Envoie une réponse au format JSON.|
+|`res.redirect()`|Redirige la requête.|
+|`res.render()`|Renvoie une vue au client.|
+|`res.send()`|Envoie une réponse au client.|
+|`res.sendFile()`|Envoie un fichier comme flux d’octet.|
+|`res.status()`|Fixe le code HTTP à retourner.|
+.legende[Quelques méthodes de l’objet `res`]
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+### Routage des requêtes
+- méthodes
+- paramètres
+- requête
+- réponse
+]
+.col-droite[
+
+Retourner un code HTTP avec un en-tête :
+
+```
+// renvoyer un fichier JSON
+app.get('/users', function (req, res, next) {
+  res.status(200);
+  res.sendFile('private/clients.json', { root: '.' } )
+});
+```
+
+```
+// renvoyer un objet JSON
+app.get('/users', function (req, res, next) {
+  res.type('application/json');
+  res.json( { message: "Hello Users!" } )
+});
+```
+```
+// affiche '{ "message": "Hello Users!" }'
+app.get('/users', function (req, res, next) {
+  res.set({
+    'Content-Type': 'text/plain; charset=latin1',
+    'Content-length': 123
+  });
+  res.end('{ "message": "Hello Users!" }')
+});
+```
+
+]
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+### Routage des requêtes
+- méthodes
+- paramètres
+- requête
+- réponse
+]
+.col-droite[
+
+Problématique du contrôle d’accès HTTP :
+
+1. Serveur sur port 3000
+2. Application sur port 8080
+
+Deux origines différentes déclencheront des requêtes *cross-origin HTTP*
+
+Autoriser des origines différentes, limiter les en-têtes personnalisables ainsi que les méthodes utilisables :
+
+```
+// middleware à placer en premier
+app.use((req, res, next) => {
+  res.set("Access-Control-Allow-Origin", "*");
+  res.set("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization");
+  app.use((req, res, next) => {
+  res.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
+  next();
+});
+```
+
+]
 
