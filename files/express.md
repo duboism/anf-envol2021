@@ -842,6 +842,48 @@ app.get('/users', function (req, res, next) {
 ]
 .col-droite[
 
+Focus sur `res.render()` pour invoquer une vue, avec trois paramètres :
+1. nom de la vue
+2. objet à partager avec la vue (optionnel)
+3. une fonction de *callback* (optionnel)
+
+```
+app.get('/mojito', function (req, res, next) {
+  const cocktail = {
+    nom: "mohito",
+    ingredients: [
+      "Menthe", "Rhum", "Citron vert",
+      "Sucre de canne", "San Pellegrino"
+    ]
+  };
+  res.render('cocktail', cocktail);
+});
+```
+
+```txt
+// cocktail.pug
+h1= cocktail.nom
+ul
+  each item in cocktail.ingredients
+    li= item
+```
+]
+???
+Un 3e paramètre : fonction de callback.
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+### Routage des requêtes
+- méthodes
+- paramètres
+- requête
+- réponse
+]
+.col-droite[
+
 Problématique du contrôle d’accès HTTP :
 
 1. Serveur sur port 3000
