@@ -48,8 +48,10 @@ Exploration des techniques de Node.js pour la communication sur le Web.
 [==> Voir le diaporama](./?f=node-web)
 
 - [TD 1 (PDF)](./td/node/1/TD1.pdf)
+- [TD 2 (PDF)](./td/node/2/TD2.pdf)
 
 ### Express.js
 
 Comment construire une application Web avec le cadriciel Express.js.  
 [==> Voir le diaporama](./?f=express)
+- [TD 1 (PDF)](./td/express/1/TD1.pdf)
