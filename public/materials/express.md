@@ -217,7 +217,7 @@ Modifier `scripts.start` dans *package.json* pour rendre compatible avec `nodemo
 #### Architecture d’une application
 
 .colonne[
-![Architecture d'une application Express](./pics/express-fig2.png)
+![Architecture d'une application Express](./images/express-fig2.png)
 ]
 .colonne[
 - *app.js* : point d’entrée
@@ -248,7 +248,7 @@ Modifier `scripts.start` dans *package.json* pour rendre compatible avec `nodemo
 
 Service [*Postman*](https://postman.co) pour tester API :
 
-.img-large[![de](./pics/express-fig1.png)]
+.img-large[![de](./images/express-fig1.png)]
 
 ]
 

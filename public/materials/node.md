@@ -44,7 +44,7 @@ Documentation officielle :
 https://nodejs.org/api/
 ]
 .colonne[
-.img-large[![Logo Node.js](./pics/node-fig1.svg)]
+.img-large[![Logo Node.js](./images/node-fig1.svg)]
 ]
 
 ]
@@ -637,7 +637,7 @@ Cycle de vie d’un *stream* en lecture :
 .col-droite[
 
 .centrer[
-  .img-grand[![Illustration du cycle de vie d’un *stream*](./pics/node-fig2.png)]
+  .img-grand[![Illustration du cycle de vie d’un *stream*](./images/node-fig2.png)]
 ]
 
 ]

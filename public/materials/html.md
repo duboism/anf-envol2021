@@ -185,7 +185,7 @@ HTML5 introduit des raffinements reposant sur le contenu
 
 .img-grand[
 .centrer[
-    ![Tableau périodique des éments (Mike Riethmuller)](./pics/html-fig1.jpg)
+    ![Tableau périodique des éments (Mike Riethmuller)](./images/html-fig1.jpg)
     ]
 ]
 
@@ -265,7 +265,7 @@ Comparaison de trois méthodes de balisage :
 - notion d’ordre pour rétablir dépendances
 ]
 .colonne[
-.img-large[![Représentation arborescente du balisage minimaliste](./pics/html-fig2.png)]
+.img-large[![Représentation arborescente du balisage minimaliste](./images/html-fig2.png)]
 .legende[Représentation arborescente du balisage minimaliste]
 ]
 
@@ -306,7 +306,7 @@ Comparaison de trois méthodes de balisage :
 - compréhension balisage accrue
 ]
 .colonne[
-.img-moy[![Représentation arborescente du balisage enrichi](./pics/html-fig3.png)]
+.img-moy[![Représentation arborescente du balisage enrichi](./images/html-fig3.png)]
 ]
 ]
 
@@ -355,7 +355,7 @@ HTML5 intègre des éléments pour groupement spécialisé
 .col-droite[
 
 .centrer[
-.img-grand[![Schéma de distribution des éléments de groupement spécialisé](./pics/html-fig4.png)]
+.img-grand[![Schéma de distribution des éléments de groupement spécialisé](./images/html-fig4.png)]
 .legende[Schéma de distribution des éléments de groupement spécialisé]
 ]
 
@@ -381,7 +381,7 @@ Pourquoi ajouter structure ?
 - en prévision de l’évolution du Web (réseaux sémantiques)
 ]
 .colonne[
-.img-large[![Affichage similaire avec balisage minimal, enrichi ou groupement spécialisé](./pics/html-fig5.png)]
+.img-large[![Affichage similaire avec balisage minimal, enrichi ou groupement spécialisé](./images/html-fig5.png)]
 ]
 
 ]

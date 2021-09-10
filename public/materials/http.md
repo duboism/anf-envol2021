@@ -28,7 +28,7 @@ Ensemble de règles de communication entre deux systèmes, sur une même couche 
 
 Chaque couche apporte des fonctions supplémentaires aux précédentes.
 
-.img-large[![Pile de protocoles](./pics/http-fig1.png "Pile de protocoles")]
+.img-large[![Pile de protocoles](./images/http-fig1.png "Pile de protocoles")]
 .legende[Pile de protocoles]
 
 ]
@@ -162,7 +162,7 @@ Code retourné pour chaque requête :
 
 Sur les navigateurs : menu développeur pour vérifier requêtes HTTP
 
-.img-large[![Onglet "Network" de DevTools pour le moteur Chrome](./pics/http-fig2.png)]
+.img-large[![Onglet "Network" de DevTools pour le moteur Chrome](./images/http-fig2.png)]
 .legende[Onglet "Network" de DevTools pour le moteur Chrome]
 
 ]
