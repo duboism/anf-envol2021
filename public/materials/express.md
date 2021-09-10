@@ -217,7 +217,7 @@ Modifier `scripts.start` dans *package.json* pour rendre compatible avec `nodemo
 #### Architecture d’une application
 
 .colonne[
-![Architecture d'une application Express](./pics/express-fig2.png)
+![Architecture d'une application Express](./images/express-fig2.png)
 ]
 .colonne[
 - *app.js* : point d’entrée
@@ -248,7 +248,7 @@ Modifier `scripts.start` dans *package.json* pour rendre compatible avec `nodemo
 
 Service [*Postman*](https://postman.co) pour tester API :
 
-.img-large[![de](./pics/express-fig1.png)]
+.img-large[![de](./images/express-fig1.png)]
 
 ]
 
@@ -828,6 +828,48 @@ app.get('/users', function (req, res, next) {
 ```
 
 ]
+
+---
+
+.col-gauche[
+### Présentation
+### Vues avec Pug
+### Routage des requêtes
+- méthodes
+- paramètres
+- requête
+- réponse
+]
+.col-droite[
+
+Focus sur `res.render()` pour invoquer une vue, avec trois paramètres :
+1. nom de la vue
+2. objet à partager avec la vue (optionnel)
+3. une fonction de *callback* (optionnel)
+
+```
+app.get('/mojito', function (req, res, next) {
+  const cocktail = {
+    nom: "mohito",
+    ingredients: [
+      "Menthe", "Rhum", "Citron vert",
+      "Sucre de canne", "San Pellegrino"
+    ]
+  };
+  res.render('cocktail', cocktail);
+});
+```
+
+```txt
+// cocktail.pug
+h1= cocktail.nom
+ul
+  each item in cocktail.ingredients
+    li= item
+```
+]
+???
+Un 3e paramètre : fonction de callback.
 
 ---
 

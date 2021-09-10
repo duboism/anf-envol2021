@@ -543,7 +543,7 @@ Objet `window.document` avec :
 </article>
 ```
 .centrer[
-  .img-moy[![Représentation sous forme d’arbre](./pics/js-fig1.png)]
+  .img-moy[![Représentation sous forme d’arbre](./images/js-fig1.png)]
   .legende[Représentation sous forme d’arbre]
 ]
 ]

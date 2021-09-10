@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    title= title + ' | ANF ENVOL 2021'
+    meta(charset = 'utf-8')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    textarea#source
+    script(src="https://remarkjs.com/downloads/remark-latest.min.js")
+    script.
+      var slideshow = remark.create({
+        sourceUrl: `./materials/!{file}.md`,
+        highlightLanguage: `#{language}`,
+        highlightStyle: 'monokai',
+      });

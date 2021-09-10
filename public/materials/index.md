@@ -13,24 +13,24 @@ layout:true
 ### HTTP
 
 Rappels sur le mécanisme du protocole servant à la communications entre les applications Web.  
-[==> Voir le diaporama](./?f=http)
+[==> Voir le diaporama](./http)
 
 ### HTML
 
 Les fondamentaux du langage qui structure et représente les informations sur les pages Web.  
-[==> Voir le diaporama](./?f=html)
+[==> Voir le diaporama](./html)
 
 ### CSS
 
 Rappels sur la syntaxe du langage qui définit la présentation des documents HTML.  
-[==> Voir le diaporama](./?f=css)
+[==> Voir le diaporama](./css)
 
 ---
 
 ### JavaScript
 
 De la syntaxe générale à la gestion de fonctions asynchrones en passant par la programmation objet, ce diaporama retrace les techniques essentielles pour tout projet Web.  
-[==> Voir le diaporama](./?f=js)
+[==> Voir le diaporama](./js)
 
 - [TD 1 (PDF)](./td/js/1/TD1.pdf)
 - [TD 2 (PDF)](./td/js/2/TD2.pdf)
@@ -38,18 +38,20 @@ De la syntaxe générale à la gestion de fonctions asynchrones en passant par l
 ### Node.js
 
 Découverte de la plateforme logicielle qui permet d’exécuter du JavaScript côté serveur.  
-[==> Voir le diaporama](./?f=node)
+[==> Voir le diaporama](./node)
 
 ---
 
 ### Node.js pour le Web
 
 Exploration des techniques de Node.js pour la communication sur le Web.  
-[==> Voir le diaporama](./?f=node-web)
+[==> Voir le diaporama](./node-web)
 
 - [TD 1 (PDF)](./td/node/1/TD1.pdf)
+- [TD 2 (PDF)](./td/node/2/TD2.pdf)
 
 ### Express.js
 
 Comment construire une application Web avec le cadriciel Express.js.  
-[==> Voir le diaporama](./?f=express)
+[==> Voir le diaporama](./express)
+- [TD 1 (PDF)](./td/express/1/TD1.pdf)

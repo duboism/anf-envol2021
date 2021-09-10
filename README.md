@@ -4,10 +4,13 @@ Materials for the Envol 2021 ANF. The slideshows are generated from an HTML page
 
 ## How to run this application on local?
 
-You need a Web server to launch the application. There are several ways to do so. On Linux and MacOS platforms, you can for example call `php` utility:
+You need a *Node.js* server to launch the application. Be sure to have *Node.js* 14.x installed on your computer and then:
 
 ```
-$ php -S localhost:8080
+$ cd anf-envol2021
+$ npm install
+$ npm start
 ```
 
-Then, open your web browser and navigate to the URL http://localhost:8080.
+Then, open your web browser and navigate to the URL:  
+http://localhost:3000.
