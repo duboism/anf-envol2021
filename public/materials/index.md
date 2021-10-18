@@ -55,3 +55,11 @@ Exploration des techniques de Node.js pour la communication sur le Web.
 Comment construire une application Web avec le cadriciel Express.js.  
 [==> Voir le diaporama](./express)
 - [TD 1 (PDF)](./td/express/1/TD1.pdf)
+
+---
+
+### Express.js et les bases de données relationnelles
+
+Utilisation d’un système de gestion de bases de données relationnelles (MySQL ou MariaDB).
+- [TD 1 (PDF)](./td/mysql/1/TD1.pdf)
+
