@@ -357,4 +357,74 @@ Répétez les étapes suivies pour le routage des requêtes concernant les agent
 - si les variables transmises via l’URL sont accessibles dans un objet `req.params`, les variables transmises avec la méthode `POST` sont quant à elles disponibles dans un objet `req.body` ;
 - en l’absence de frontale, utilisez l’application [*Postman*](https://www.postman.com/) pour tester vos routes autres que `GET`.
 
+## Optimisation de l’architecture
+
+L’objectif de cette partie est de clarifier la logique de routage de la dorsale. L’idée est de reporter dans un contrôleur tous les *callbacks* transmis en paramètres aux routes définies.
+
+Commencez par créer un répertoire *controllers* à la racine et, à l’intérieur, un fichier *agents.js* chargé d’exporter un objet contenant deux méthodes, `getAgents` et `getMissionsAgent` :
+
+```js
+const db = require('../services/db');
+
+const getAgents;
+
+const getMissionsAgent;
+
+module.exports = {
+    getAgents,
+    getMissionsAgent
+};
+```
+
+Complétez la définition des méthodes à partir du code contenu dans le fichier *routes/agents.js*. Par exemple, la méthode `getAgents()` devient :
+
+```js
+const getAgents = (req, res) => {
+  if (req.params.id_agent) {
+    // query
+    db.query(
+    `SELECT firstname, lastname, status, cap
+    FROM agents, status
+    WHERE ref_status = id_status
+    AND id_agent = ?;`,
+    [req.params.id_agent],
+    (err, results) => {
+      if (err) res.send(err);
+      else res.send(results);
+    });
+  } else {
+    // query
+    db.query(
+    `SELECT firstname, lastname, status, cap
+    FROM agents, status
+    WHERE ref_status = id_status
+    ORDER BY lastname ASC;`,
+    (err, results) => {
+      if (err) res.send(err);
+      else res.send(results);
+    });
+  }
+};
+```
+
+Importez maintenant le contrôleur dans le fichier de routage des requête concernant les agents et appelez les méthodes définies dans le contrôleur :
+
+```js
+const express = require('express');
+const router = express.Router();
+const agents = require('../controllers/agents');
+
+/* GET agents */
+router.get('/:id_agent?', agents.getAgents);
+
+/* GET missions by agent */
+router.get('/:id_agent/missions/:id_mission?', agents.getMissionsAgent);
+
+module.exports = router;
+```
+
+Notez que l’appel au service *db.js* n’est plus utile ici.
+
+Répétez les opérations pour les routes du fichier *missions.js*.
+
 **Vous trouverez le code final des documents HTML et JavaScript dans le dossier *fin* de ce premier TD.**
