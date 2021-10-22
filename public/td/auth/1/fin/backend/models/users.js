@@ -1,7 +1,7 @@
 const db = require('../services/db');
 
-/* GET one user */
-async function getOneUser(id_user) {
+/* GET user by id */
+async function getUserById(id_user) {
 
   const results = await db.query(
     `SELECT email, password
@@ -10,9 +10,9 @@ async function getOneUser(id_user) {
     [id_user]
   );
 
-  return results;
+  return results[0];
 };
 
 module.exports = {
-  getOneUser
+  getUserById
 };

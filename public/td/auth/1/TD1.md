@@ -20,7 +20,7 @@ Créez, dans le répertoire *models*, un fichier *users.js* qui sera chargé des
 const db = require('../services/db');
 
 /* GET one user */
-async function getOneUser(id_user) {
+async function getUserById(id_user) {
 
     const results = await db.query(
         `SELECT email, password
@@ -33,7 +33,7 @@ async function getOneUser(id_user) {
 };
 
 module.exports = {
-    getOneUser
+    getUserById
 };
 ```
 
@@ -47,11 +47,11 @@ Rien de bien nouveau dans cette méthode : elle affiche l’email et le mot de 
 const users = require('../models/users');
 ```
 
-Définissez maintenant une méthode asynchrone `checkAuth()` qui se limite pour l’instant de mobiliser la méthode `getOneUser()` du modèle *users* :
+Définissez maintenant une méthode asynchrone `checkAuth()` qui se limite pour l’instant de mobiliser la méthode `getUserById()` du modèle *users* :
 ```js
 const checkAuth = async (req, res, next) => {
     try {
-        const user = await users.getOneUser(req.body.id_user)[0];
+        const user = await users.getUserById(req.body.id_user)[0];
         // check
     } catch (err) {
         next(err);
@@ -65,9 +65,9 @@ Dans le bloc `try`, vérifier qu’un paramètre `password` envoyé via formulai
 const checkAuth = async (req, res, next) => {
     try {
         // a user
-        const user = await users.getOneUser(req.body.id_user);
+        const user = await users.getUserById(req.body.id_user);
         // if given password id equal to the one in database…
-        if (req.body.password == user[0].password) {
+        if (req.body.password == user.password) {
             // … continue!
             next();
         }
@@ -104,5 +104,7 @@ router.post('/add', auth.checkAuth, missions.addMission);
 router.put('/update/:id_mission', auth.checkAuth, missions.updateMission);
 router.delete('/del/:id_mission', auth.checkAuth, missions.deleteMission);
 ```
+
+Utilisez à présent le service *Postman* pour vérifier le bon fonctionnement de l’authentification en paramétrant par exemple une requête de type `POST` avec deux paramètres : `id_user` défini à `1` et `password` à `$2y$10$lgj2e81t8h/8.r/6MIHEVus8jVVr/Hw1IEZMX1bwya5LsF.g66Bvi`.
 
 **Vous trouverez le code final des documents HTML et JavaScript dans le dossier *fin* de ce premier TD.**
