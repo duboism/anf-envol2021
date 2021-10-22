@@ -60,10 +60,11 @@ Comment construire une application Web avec le cadriciel Express.js.
 
 ### Express.js et les bases de données relationnelles
 
-Utilisation d’un système de gestion de bases de données relationnelles (MySQL ou MariaDB). Le premier TD vous amènera à manipuler les techniques clés de l’interfaçage entre un SGBD de type MySQL et une application dorsale lorsque le second se concentre sur l’optimisation du code produit dans l’optique de préparer le troisième qui, lui, présente une manière de restreindre l’accès aux routes dévolues à la gestion de la base de données.
+Utilisation d’un système de gestion de bases de données relationnelles (MySQL ou MariaDB). Le premier TD vous amènera à manipuler les techniques clés de l’interfaçage entre un SGBD de type MySQL et une application dorsale lorsque le second se concentre sur l’optimisation du code produit dans l’optique de préparer la sécurisation de l’accès aux routes dévolues à la gestion de la base de données.
 - [TD 1 (PDF)](./td/mysql/1/TD1.pdf)
 - [TD 2 (PDF)](./td/mysql/2/TD2.pdf)
 
 ### Sécurisation des routes de l’application dorsale
 
 Comment restreindre l’accès aux routes de la dorsale ?
+- [TD 1 (PDF)](./td/auth/1/TD1.pdf)
