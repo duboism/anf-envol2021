@@ -37,7 +37,7 @@ const login = async (req, res, next) => {
         if (!result) {
           return res.status(401).send('Mot de passe incorrect !');
         } else {
-          res.status(200).send({
+          res.status(200).json({
             userId: user.id_user,
             token: jwt.sign(
               { userId: user.id_user },
@@ -45,6 +45,7 @@ const login = async (req, res, next) => {
               { expiresIn: '24h' }
             )
           });
+          res.redirect('/');
         }
       });
     }
