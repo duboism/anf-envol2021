@@ -119,10 +119,159 @@ Enfin, définissez une route *POST* `/add` pour l’insertion d’un utilisateur
 
 ## Étape 3 : authentifier un utilisateur
 
+### Établir la route d’accès
 
+L’application frontale met à disposition un formulaire d’authentification avec un champ pour renseigner l’email et un autre pour le mot de passe qui redirige, à la soumission, vers une route `/users/login`. Paramétrez le routeur de telle sorte à capturer les données transmises à cette adresse et à les traiter avec une méthode `users.login()` :
+
+```js
+router.post('/login', users.login);
+```
+
+### Comparer les mots de passe
+
+Dans la base de données, le mot de passe de l’utilisateur est enregistré sous une forme chiffrée par [la fonction de hachage *Bcrypt*](https://fr.wikipedia.org/wiki/Bcrypt). Le module Node homonyme met opportunément à disposition une méthode `compare()` pour comparer la saisie en clair de l’utilisateur avec la donnée chiffrée. Mais avant de réaliser cette opération, vous vérifierez si l’email saisi correspond bien à un enregistrement de la table `users`.
+
+Écrivez tout d’abord la structure de votre contrôleur `login` :
+
+```js
+const login = async (req, res, next) => {
+    try {
+        // verify if the given email is in the database
+        // if so, compare the hash with the given password
+        // and, then, emit a token
+    } catch (err) {
+        next(err);
+    }
+```
+
+Appelez la méthode `getUserByEmail()` pour chercher un utilisateur en fonction d’un mot de passe saisi :
+
+```js
+const user = await users.getUserByEmail(req.body.email);
+```
+
+S’il n’existe aucun utilisateur pour l’email, renvoyez une erreur 401 :
+
+```js
+if (!user) return res.status(401).send('Utilisateur non trouvé');
+```
+
+Dans les autres cas, vous pouvez comparer les mots de passe et, si les empreintes numériques (*hash*) ne correspondent pas, renvoyez une autre erreur 401 :
+
+```js
+bcrypt.compare(req.body.password, user.password)
+.then( result => {
+    if (!result) return res.status(401).send('Mot de passe incorrect !');
+    else {
+        // send a token
+    }
+} );
+```
+
+### Émettre un jeton d’authentification
+
+L’émission d’un jeton d’authentification recourt à une autre librairie : *JSONWebToken*. Installez-la avec *npm* et sauvegardez-la dans le fichier *package.json* :
+
+```shell
+npm install jsonwebtoken --save
+```
+
+Importez-le ensuite comme tous les autres :
+
+```js
+const jwt = require('jsonwebtoken');
+```
+
+À l’intérieur de votre contrôleur `login`, une fois le mot de passe vérifié, émettez un objet avec la méthode `res.json()` dans lequel se trouvent deux clés : une pour transmettre l’identifiant de l’utilisateur et l’autre pour le *token* :
+
+```js
+res.status(200).json({
+    userId: user.id_user,
+    token: 'A SIGNED TOKEN'
+)});
+```
+
+Il est temps de passer à la dernière phase : signer le jeton d’authentification avec la méthode `jwt.sign()` :
+
+```js
+res.status(200).json({
+    userId: user.id_user,
+    token: jwt.sign(
+        { userId: user.id_user },
+        'SECRET_TOKEN',
+        { expiresIn: '24h' }
+    )
+)});
+```
+
+**Remarque :** le second paramètre de la méthode `jwt.sign()` doit contenir une phrase secrète bien plus complexe que celle de l’exemple.
+
+Et n’oubliez pas d’exporter votre contrôleur !
 
 ## Étape 4 : appliquer le contrôle d’accès
 
+L’identification de l’utilisateur devrait maintenant fonctionner. Il reste à paramétrer un *middleware* qui vérifie l’identité de tout utilisateur essayant d’atteindre une route avec accès restreint. Ce contrôleur existe déjà dans le module *auth.js* : `checkAuth()`.
 
+### Renforcer le contrôle d’accès
 
-**Vous trouverez le code final des documents HTML et JavaScript dans le dossier *fin* de ce second TD.**
+Importez le module *JSONWebToken* et revoyez son squelette :
+
+```js
+const jwt = require('jsonwebtoken');
+
+const checkAuth = async (req, res, next) => {
+    try {
+        // get the token
+        // decode the token
+        // extract the userId
+        // check that the user exists in database
+        // if not, throw an exception
+        // otherwise process!
+    } catch (err) {
+        next(err);
+    }
+};
+```
+
+### Comment récupérer le jeton d’authentification ?
+
+La création, à l’étape précédente, d’un jeton d’authentification par le contrôleur `login` a eu pour effet d’ajouter un objet `Authorization` en tête de chaque requête en provenance de l’application frontale et avec, comme valeur de la clé `Bearer`, une longue chaîne encodée. C’est cette chaîne qu’il faut analyser pour récupérer le jeton :
+
+```js
+const token = req.headers.authorization.split(' ')[1];
+```
+
+Et pour ensuite le décoder à l’aide de la méthode `jwt.verify()` :
+
+```js
+const decodedToken = jwt.verify(token, 'SECRET_TOKEN');
+```
+
+Une fois le jeton décodé, vous pouvez récupérer la clé `userId` et vous en servir pour tenter de retrouver un utilisateur dans la base de données :
+
+```js
+const user = await users.getUserById(decodedToken.userId);
+```
+
+Si les informations ne concordent pas, levez une exception. Dans les autres cas, passez simplement au *middleware* suivant !
+
+```js
+if (req.body.userId && req.body.userId !== decodedToken.userId) {
+    throw 'Invalid user ID';
+} else {
+    next();
+}
+```
+
+## Étape 5 : appliquer le contrôle d’accès
+
+Suivez le modèle ci-dessous pour assujettir toutes les routes de votre application (à part celle réservée à l’authentification) au contrôle d’accès :
+
+```js
+// import auth controller
+const auth = require('../controllers/auth');
+
+router.get('/', auth.checkAuth, users.getUsers);
+```
+
+**Vous trouverez le code final dans le dossier *fin* de ce second TD.**
