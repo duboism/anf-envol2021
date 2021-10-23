@@ -12,7 +12,7 @@ async function getAllUsers() {
   return results;
 };
 
-/* GET one user */
+/* GET user by id */
 async function getUserById(id_user) {
 
   const results = await db.query(
@@ -22,7 +22,20 @@ async function getUserById(id_user) {
     [id_user]
   );
 
-  return results;
+  return results[0];
+};
+
+/* GET user by email */
+async function getUserByEmail(email) {
+
+  const results = await db.query(
+    `SELECT id_user, password
+    FROM users
+    WHERE email = ?;`,
+    [email]
+  );
+
+  return results[0];
 };
 
 /* POST user */
@@ -35,19 +48,6 @@ async function addOneUser(email, password) {
   );
 
   return "User created";
-};
-
-/* POST user by email */
-async function getUserByEmail(email) {
-
-  const results = await db.query(
-    `SELECT id_user, password
-    FROM users
-    WHERE email = ?;`,
-    [email]
-  );
-
-  return results[0];
 };
 
 module.exports = {
