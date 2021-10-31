@@ -4,6 +4,14 @@ La sécurité d’une application chargée de gérer des données sensibles comm
 
 D’un point de vue pratique, vous allez mettre en place un mécanisme pour ajouter des utilisateurs en chiffrant leurs mots de passe à l’aide du module *Bcrypt* et pour leur permettre de s’authentifier à l’aide de leurs identifiants (email et mot de passe) afin de naviguer à travers les routes de l’application. Le processus d’authentification sera complexifié grâce au recours au module *JSONWebToken* chargé de générer un jeton (*token*) à partir d’une phrase secrète si les identifiants renseignés par l’utilisateur sont cohérents.
 
+Avant de débuter ce TD, n’oubliez pas d’installer votre application et de [lancer le serveur](http://localhost:3000) :
+
+```shell
+cd backend
+npm install
+npm start
+```
+
 ## Étape 1 : lister les utilisateurs
 
 ### Compléter le modèle des utilisateurs
