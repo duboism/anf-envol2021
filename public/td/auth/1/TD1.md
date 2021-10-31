@@ -12,6 +12,20 @@ Dans le répertoire *private*, vous trouverez un fichier *missions.sql* augment�
 mysql -u root -p missions < missions.sql
 ```
 
+Pour information, le mot de passe associé à l’utilisateur `admin@envol2021.fr` est : *envol-2021*.
+
+## Étape 2 : installer l’application
+
+Comme dans le TD précédent, déplacez-vous à la racine du répertoire *backend*, installez l’application avec tous les modules nécessaires et lancez-la :
+
+```shell
+cd backend
+npm install
+npm start
+```
+
+Votre application est maintenant [disponible](http://localhost:3000).
+
 ## Étape 2 : définir un modèle pour les utilisateurs
 
 Créez, dans le répertoire *models*, un fichier *users.js* qui sera chargé des opérations sur les utilisateurs. Pour le moment, ne définissez qu’une méthode pour récupérer les informations d’un utilisateur particulier :
@@ -47,7 +61,7 @@ Rien de bien nouveau dans cette méthode : elle affiche l’email et le mot de 
 const users = require('../models/users');
 ```
 
-Définissez maintenant une méthode asynchrone `checkAuth()` qui se limite pour l’instant de mobiliser la méthode `getUserById()` du modèle *users* :
+Définissez maintenant une méthode asynchrone `checkAuth()` qui se limite pour l’instant à mobiliser la méthode `getUserById()` du modèle *users* :
 ```js
 const checkAuth = async (req, res, next) => {
     try {
@@ -66,7 +80,7 @@ const checkAuth = async (req, res, next) => {
     try {
         // a user
         const user = await users.getUserById(req.body.id_user);
-        // if given password id equal to the one in database…
+        // if given password is equal to the one in database…
         if (req.body.password == user.password) {
             // … continue!
             next();
@@ -105,6 +119,6 @@ router.put('/update/:id_mission', auth.checkAuth, missions.updateMission);
 router.delete('/del/:id_mission', auth.checkAuth, missions.deleteMission);
 ```
 
-Utilisez à présent le service *Postman* pour vérifier le bon fonctionnement de l’authentification en paramétrant par exemple une requête de type `POST` avec deux paramètres : `id_user` défini à `1` et `password` à `$2y$10$lgj2e81t8h/8.r/6MIHEVus8jVVr/Hw1IEZMX1bwya5LsF.g66Bvi`.
+Utilisez à présent le service *Postman* pour vérifier le bon fonctionnement de l’authentification en paramétrant par exemple une requête de type `POST` avec deux paramètres : `id_user` défini à `1` et `password` à `$2y$10$yo2QZYwGkk.6EtIsS/f4MeF8j8yC9xU.mww6fW2cXAvFDARMJi/T2`.
 
-**Vous trouverez le code final des documents HTML et JavaScript dans le dossier *fin* de ce premier TD.**
+**Vous trouverez le code final des documents JavaScript dans le dossier *fin* de ce premier TD.**

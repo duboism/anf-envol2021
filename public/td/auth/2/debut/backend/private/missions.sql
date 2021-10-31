@@ -101,4 +101,4 @@ CREATE TABLE `users`
 
 INSERT INTO `users` (`id_user`, `email`, `password`)
 VALUES
-(1, 'admin@envol2021.fr', '$2y$10$lgj2e81t8h/8.r/6MIHEVus8jVVr/Hw1IEZMX1bwya5LsF.g66Bvi');
+(1, 'admin@envol2021.fr', '$2y$10$yo2QZYwGkk.6EtIsS/f4MeF8j8yC9xU.mww6fW2cXAvFDARMJi/T2');
