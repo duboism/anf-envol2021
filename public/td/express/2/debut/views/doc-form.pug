@@ -1,0 +1,48 @@
+extends layout
+
+block content
+  h1.display-2.mb-3= title
+  form(
+    action=action
+    method="post"
+    name="form-new-ref"
+  )
+    p.lead Les champs précédés d’une astérisque (*) sont obligatoires.
+    fieldset(class="border rounded bg-light p-2")
+      div.mb-3.row
+        label.form-label.col-sm-3(for="halId_s")= "Identifiant HAL :"
+        div.col-sm-9
+          input#halId_s.form-control(
+            type="text"
+            name="halId_s"
+            placeholder="halshs-00791804"
+            value=doc.halId_s
+          )
+      div.mb-3.row
+        label.form-label.col-sm-3(for="docType_s")= "*Type de document :"
+        div.col-sm-9
+          select#docType_s.form-select(name="docType_s")
+            option(selected disabled)= "Type de document…"
+      div.mb-3.row
+        label.form-label.col-sm-3(for="publicationDate_tdate")= "*Année de publication :"
+        div.col-sm-9
+          input#publicationDate_tdate.form-control(
+            type= "number"
+            name= "publicationDate_tdate"
+            placeholder= "AAAA"
+            min= 1900
+            max= 2099
+            value= doc.publicationDate_tdate
+            required
+          )
+      div.mb-3.row
+        label.form-label.col-sm-3(for="label_s")= "*Référence :"
+        div.col-sm-9
+          textarea#label_s.form-control(
+            name="label_s"
+            placeholder="Référence complète"
+            rows=3
+            required
+          )= doc.label_s
+      div.text-end
+        button(type="submit" class="btn btn-primary")= verb

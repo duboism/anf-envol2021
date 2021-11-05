@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  h1.display-2.mb-3= title
+  div.d-flex.justify-content-end.gap-2
+    each docType in docTypes
+      a.btn.btn-primary(
+        type= button
+        href= "docs/" + docType
+      )= docType
+    a.btn.btn-secondary(
+      type= button
+      href= "docs/new"
+    )= "Ajouter une référence"
+  each year in years
+    h2= year
+    ul.list-group.list-group-flush.mt-3
+      each doc in docs
+        if year == doc.year
+          li.d-flex.justify-content-start.gap-1.list-group-item= doc.ref
+            a(href="docs/update/" + doc.id)
+              i.bi-pencil-square
+            a(href="docs/delete/" + doc.id)
+               i.bi-trash
