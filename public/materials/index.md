@@ -55,6 +55,7 @@ Exploration des techniques de Node.js pour la communication sur le Web.
 Comment construire une application Web avec le cadriciel Express.js.  
 [==> Voir le diaporama](./express)
 - [TD 1 (PDF)](./td/express/1/TD1.pdf)
+- [TD 2 (PDF)](./td/express/2/TD2.pdf)
 
 ---
 
@@ -68,3 +69,4 @@ Utilisation d’un système de gestion de bases de données relationnelles (MySQ
 
 Comment restreindre l’accès aux routes de la dorsale ?
 - [TD 1 (PDF)](./td/auth/1/TD1.pdf)
+- [TD 2 (PDF)](./td/auth/2/TD2.pdf)
