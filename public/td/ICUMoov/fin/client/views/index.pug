@@ -1,0 +1,21 @@
+extends layout
+
+block content
+  h1= "Mesures enregistrées"
+  p
+    a(href="./temperature")= "Acquérir une nouvelle température"
+  p
+    a(href="./light")= "Acquérir une nouvelle mesure de luminosité"
+  h2= "Températures"
+  ul
+    each temperature in temperatures
+      li
+        b= temperature.date.toLocaleDateString() + " : "
+        | #{temperature.temperature}
+
+  h2= "Intensités lumineuses"
+  ul
+    each light in lights
+      li
+        b= light.date.toLocaleDateString() + " : "
+        | #{light.light}
