@@ -3,7 +3,7 @@ const net = require('net');
 const Light = require('../models/light');
 const Temperature = require('../models/temperature');
 
-const uri = 'mongodb+srv://alex:anderson91@cluster0.udwqf.mongodb.net/ICUMoov?retryWrites=true&w=majority';
+const uri = 'mongodb+srv://<USER>:<PASS>@cluster0.udwqf.mongodb.net/ICUMoov?retryWrites=true&w=majority';
 
 mongoose.connect(uri, {
   useNewUrlParser: true,
