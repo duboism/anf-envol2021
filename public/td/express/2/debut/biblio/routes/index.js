@@ -11,23 +11,24 @@ const DBFILE = './private/db.json';
 /* GET home page: liste les références bibliographiques. */
 router.get('/', function(req, res, next) {
     console.log("Ça va lire");
+    // Attention, c'est une lecture asynchrone
     fs.readFile('./private/db.json', 'utf8', function (err, data) {
         if (err) throw err;
         rows = JSON.parse(data);
+        console.log(rows);
+        const documents = Array();
+        for (doc of rows.response.docs) {
+            documents.push({
+                ref: entities.decode(doc.label_s)
+            });
+        }
+        res.render(
+            'index',
+            {
+                title: 'Références bibliographiques',
+                docs: documents.sort(),
+            });
     });
-    console.log(rows);
-    const documents = Array();
-    for (doc of rows.response.docs) {
-        documents.push({
-            ref: entities.decode(doc.label_s)
-        });
-    }
-    res.render(
-        'index',
-        {
-            title: 'Références bibliographiques',
-            docs: documents.sort(),
-        });
 });
 
 module.exports = router;
