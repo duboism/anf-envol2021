@@ -20,6 +20,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 
+// Routeur pour /docs
+var docsRouter = require('./routes/docs');
+app.use('/docs', docsRouter);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     res.status(404);
