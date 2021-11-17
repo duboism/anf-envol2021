@@ -27,7 +27,8 @@ router.get('/', function(req, res, next) {
             {
                 title: 'Références bibliographiques',
                 docs: documents.sort(),
-            });
+            }
+        );
     });
 });
 
