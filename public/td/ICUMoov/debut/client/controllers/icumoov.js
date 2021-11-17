@@ -3,6 +3,8 @@
 const mongoose = require('mongoose');
 
 const uri = 'mongodb://127.0.0.1/ICUMoov?retryWrites=true&w=majority';
+const Light = require('../models/light');
+const Temperature = require('../models/temperature');
 
 mongoose.connect(uri, {
     useNewUrlParser: true,
@@ -27,6 +29,7 @@ const getData = () => {
         // Fonction de rappel
         socket.on('data', (data) => {
             const value = data.toString().substr(4);
+            newData(value, cmd);
             res.render(
                 'data',
                 {
@@ -36,6 +39,21 @@ const getData = () => {
             );
         });
     };
+};
+
+function newData(data, type) {
+    if (type == 'temperature') {
+        var obj = new Temperature({
+            temperature: data,
+            date: Date.now()
+        });
+    } else {
+        var obj = new Light({
+            light: data,
+            date: Date.now()
+        });
+    }
+    obj.save();
 };
 
 module.exports = {
