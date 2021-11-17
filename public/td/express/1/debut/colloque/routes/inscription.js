@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET: affiche la page. */
-router.get('/', function(req, res, next) {
+/* Middleware simple qui affiche la page */
+router.post('/', function(req, res, next) {
     res.render(
         'confirmation',
         {title: 'Confirmation de votre inscription'}
