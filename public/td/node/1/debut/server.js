@@ -36,6 +36,29 @@ const server = http.createServer(
                 if (error) console.log(error);
             });
         });
+
+        // compléter inscriptions.csv
+        // `data` est envoyé quand la requête reçoit des données (c'est le cas de la requête POST envoyée par le formulaire)
+        // Attention, ce ne sont pas les octets (en-tête et compagnie) mais le corps (body)
+        // Note: ici on fait cela quelle que soit la route ce qui n'est pas très bon (une requête POST sur / déclenche cela aussi)
+        request.on('data', (chunk) => {
+            // À des fins pédagogiques, j'affiche chunk
+            let s = chunk.toString();
+            console.log(s);
+            // Récupère les valeurs
+            vals = {};
+            for (paramval of s.split("&")) {
+                [k, v] = paramval.split("=");
+                vals[k] = decodeURIComponent(v);
+            }
+            console.log(vals)
+            // Formate une ligne CSV
+            data = Object.values(vals).join("\t") + "\n";
+            // ajout dans le fichier
+            fs.appendFile('./inscriptions.csv', data, (error) => {
+                if (error) console.log(error);
+            });
+        });
     }
 )
 
