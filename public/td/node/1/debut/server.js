@@ -21,10 +21,20 @@ const server = http.createServer(
         default: filename = pathname;
         }
 
-        // Affiche le fichier
-        let index = fs.createReadStream(filename);
-        stream.pipeline(index, response, (error) => {
-            if (error) console.log(error);
+        // Si le fichier existe, on l'envoie (flux en écriture : fichier HTML envoyé)
+        // Sinon on affiche la page pour les erreurs 404
+        // Note: exists est obsolète.
+        fs.exists(filename, (exists) => {
+            const headers = {'Content-Type': 'text/html'};
+            if (!exists) {
+                filename = './404.html';
+                response.writeHead(404, headers);
+            }
+            else response.writeHead(200, headers);
+            let file = fs.createReadStream(filename);
+            stream.pipeline(file, response, (error) => {
+                if (error) console.log(error);
+            });
         });
     }
 )
