@@ -56,6 +56,24 @@ function newData(data, type) {
     obj.save();
 };
 
+const listLights = () => {
+    return (req, res) => {
+        Light.find()
+            .then(lights => res.status(200).json(lights))
+            .catch(error => res.status(400).json({ error }));
+    };
+};
+
+const listTemperatures = () => {
+    return (req, res) => {
+        Temperature.find()
+            .then(temperatures => res.status(200).json(temperatures))
+            .catch(error => res.status(400).json({ error }));
+    };
+};
+
 module.exports = {
-    getData
+    getData,
+    listLights,
+    listTemperatures,
 };
