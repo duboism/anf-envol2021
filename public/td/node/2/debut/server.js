@@ -9,4 +9,4 @@ PORT = 3001;
 const app = connect();
 
 // port d'écoute
-app.listen(3001);
+app.listen(PORT);
