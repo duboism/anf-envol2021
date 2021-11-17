@@ -7,3 +7,6 @@ block content
       type= button
       href= "docs/new"
     )= "Ajouter une référence"
+  ul.list-group.list-group-flush.mt-3
+    each doc in docs
+      li.list-group-item= doc.ref
