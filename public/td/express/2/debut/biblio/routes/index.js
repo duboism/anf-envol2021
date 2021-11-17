@@ -3,6 +3,8 @@ var router = express.Router();
 
 // Pour lire la base de données
 const fs = require('fs');
+// Traitement des caratères spéciaux
+const entities = require('html-entities');
 
 const DBFILE = './private/db.json';
 
@@ -17,7 +19,7 @@ router.get('/', function(req, res, next) {
     const documents = Array();
     for (doc of rows.response.docs) {
         documents.push({
-            ref: doc.label_s
+            ref: entities.decode(doc.label_s)
         });
     }
     res.render(
