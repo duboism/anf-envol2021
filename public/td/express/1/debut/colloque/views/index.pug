@@ -1,5 +1,65 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1.display-2 Inscription
+  p.lead
+    | Les inscriptions sont ouvertes jusqu’au 15 mai 2020, date impérative.
+    | Une fois validée, il vous sera demandé de vous acquitter des frais
+    | d’inscriptions qui s’élèvent à 250 €. Tous les champs sont obligatoires.
+  form(
+    action="./inscription"
+    method="post"
+    name="form-inscription"
+  )
+    div.row
+      div.col
+        fieldset(class="border rounded bg-light p-2")
+          legend Identité
+          div.mb-3
+            label.visually-hidden(for="nom") Nom :
+            input#nom.form-control(
+              type="text"
+              name="nom"
+              placeholder="Nom"
+              required
+            )
+          div.mb-3
+            labelvisually-hidden(for="prenom") Prénom :
+            input#prenom.form-control(
+              type="text"
+              name="prenom"
+              placeholder="Prénom"
+              required
+            )
+          div.mb-3
+            label.visually-hidden(for="email") Adresse mail :
+            div.input-group
+              div.input-group-text @
+              input#email.form-control(
+                type="text"
+                name="email"
+                placeholder="Adresse email"
+                required
+              )
+      div.col
+        fieldset(class="border rounded bg-light p-2 mb-3")
+          legend Informations professionnelles
+          div.mb-3
+            label.visually-hidden(for="statut") Statut :
+            select#statut.form-select(name="statut")
+              option(selected) Statut…</option>
+              option(value="c") Chercheur·euse
+              option(value="e") Enseignant·e
+              option(value="d") Doctorant·e
+              option(value="i") Ingénieur·e
+          div.mb-3
+            label.visually-hidden(for="affiliation") Affiliation :
+            input#affiliation.form-control(
+              type="text"
+              name="affiliation"
+              placeholder="Affiliation"
+              required
+            )
+            small.form-text Établissement scientifique, université, entreprise…
+        div.text-end
+          button(type="submit" class="btn btn-primary") S’enregistrer
