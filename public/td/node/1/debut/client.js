@@ -26,3 +26,18 @@ for (let k of Object.keys(data))
     paramvals.push([k, encodeURIComponent(data[k])].join("="));
 query = paramvals.join("&");
 console.log(query);
+
+// Envoi de la requête
+const request = http.request(options, (response) => {
+    console.log("Informations envoyées !");
+    console.log(response.statusCode);
+});
+
+// Gestion des erreurs
+request.on('error', (error) => {
+    console.log(`Erreur dans la requête : ${ error.message }`);
+});
+
+// Fermeture du flux
+request.end(query);
+
