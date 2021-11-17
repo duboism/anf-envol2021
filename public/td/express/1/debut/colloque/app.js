@@ -32,8 +32,10 @@ app.use(function(req, res, next) {
     res.render('404');
 });
 
-// error handler
+// error handler: c'est un middleware spécial car il accepte 4 paramètres
+// (le premier étant l'erreur transmise par next(error)) - cf. inscription.js).
 app.use(function(err, req, res, next) {
+  console.log("Des erreurs, c'est pas Lesieur");
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
