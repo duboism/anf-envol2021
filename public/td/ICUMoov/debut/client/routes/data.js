@@ -1,17 +1,17 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page: redirige vers /data. */
+/* GET /data: liste les mesures. */
 router.get('/', function(req, res, next) {
-    res.redirect('/data');
-});
-
-/* GET /light: enregistre la valeur de la luminosité. */
-router.get('/light', function(req, res, next) {
     res.render('index', { title: 'Express' });
 });
 
-/* GET /temperature: enregistre la valeur de la temperature. */
+/* GET /data/lights: affiche les mesures de luminosité. */
+router.get('/lights', function(req, res, next) {
+    res.render('index', { title: 'Express' });
+});
+
+/* GET /data/temperature: affiche les mesures de temperature. */
 router.get('/temperature', function(req, res, next) {
     res.render('index', { title: 'Express' });
 });
