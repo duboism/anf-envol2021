@@ -8,7 +8,7 @@ const options = {
     hostname: 'localhost',
     port: 3000,path: '/inscription',
     method: 'POST'
-}
+};
 
 // Donnée d'inscription
 const data = {
