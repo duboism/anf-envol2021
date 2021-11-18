@@ -14,8 +14,29 @@ mongoose.connect(uri, {
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 const net = require('net');
+const os = require('os');
 
+var networkInterfaces = Object.values(os.networkInterfaces()).flat();
+var localInterfaces = networkInterfaces
+    .filter(
+        iface => {
+            return (! iface.internal) && (iface.family == "IPv4");
+        }
+    );
+var MY_IP;
+if (localInterfaces.length == 1) {
+    let MY_IP_AUTO = localInterfaces[0].address;
+    console.log("Automatically guessed IP " + MY_IP_AUTO);
+    MY_IP = process.env.MY_IP || MY_IP_AUTO;
+} else {
+    if ( process.env.MY_IP ) {
+        MY_IP = process.env.MY_IP;
+    } else {
+        throw "Can't determine IP automatically and none given";
+    }
+}
 const ARDUINO_PORT = 9999;
+console.log("Will connect to Arduino server on " + MY_IP + ":" + ARDUINO_PORT);
 
 const getData = () => {
     return (req, res) => {
@@ -24,7 +45,7 @@ const getData = () => {
         // Ouvre une socket vers le serveur
         const socket = net.connect(
             {
-                host: "192.168.1.186",
+                host: MY_IP,
                 port: ARDUINO_PORT,
             }
         );
