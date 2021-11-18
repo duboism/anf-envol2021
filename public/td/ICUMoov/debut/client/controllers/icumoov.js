@@ -72,8 +72,20 @@ const listTemperatures = () => {
     };
 };
 
+const listData = () => {
+    return async (req, res) => {
+        const temperatures = await Temperature.find();
+        const lights = await Light.find();
+        res.render('index', {
+            lights: lights,
+            temperatures: temperatures
+        });
+    }
+};
+
 module.exports = {
     getData,
     listLights,
     listTemperatures,
+    listData,
 };
