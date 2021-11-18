@@ -1,0 +1,36 @@
+extends layout
+
+block content
+  script(src='https://cdn.jsdelivr.net/npm/chart.js')
+  script(src='https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@2.0.0/dist/chartjs-adapter-date-fns.bundle.min.js')
+  div
+    canvas#myChart
+  script(type="text/javascript").
+    const lights = JSON.parse('!{JSON.stringify(lights)}');
+    const temperatures =JSON.parse('!{JSON.stringify(temperatures)}');
+
+    // Lights
+    const data = {
+      labels: lights.map(light_rec => light_rec.date),
+      datasets: [{
+        label: 'Light',
+        data:lights.map(light_rec => light_rec.light),
+      }]
+    }
+
+    const config = {
+      type: 'line',
+      data: data,
+      options: {
+        scales: {
+          x: {
+            type: 'time',
+          }
+        }
+      }
+    };
+
+    const myChart = new Chart(
+      document.getElementById('myChart'),
+      config
+    );
