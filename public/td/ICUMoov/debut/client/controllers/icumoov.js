@@ -22,7 +22,12 @@ const getData = () => {
         // Recupère le paramètre cmd (méthode à interroger)
         const cmd = req.params.cmd;
         // Ouvre une socket vers le serveur
-        const socket = net.connect({ port: ARDUINO_PORT });
+        const socket = net.connect(
+            {
+                host: "192.168.1.186",
+                port: ARDUINO_PORT,
+            }
+        );
         // Écrit la commande et ferme
         socket.write(cmd);
         socket.end();
