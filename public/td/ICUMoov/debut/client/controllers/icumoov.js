@@ -106,7 +106,7 @@ const listData = () => {
             lights: lights,
             temperatures: temperatures
         });
-    }
+    };
 };
 
 module.exports = {
